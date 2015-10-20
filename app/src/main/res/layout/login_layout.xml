@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:weightSum="1">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:id="@+id/loginBtn"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="128dp"
+            android:onClick="setContentView" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/passwordInput"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/usernameInput"
+            android:layout_marginBottom="78dp"
+            android:layout_above="@+id/passwordInput"
+            android:layout_alignLeft="@+id/loginBtn"
+            android:layout_alignStart="@+id/loginBtn"
+            android:layout_alignRight="@+id/loginBtn"
+            android:layout_alignEnd="@+id/loginBtn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Password"
+            android:id="@+id/labelLoginPassword"
+            android:layout_above="@+id/passwordInput"
+            android:layout_alignRight="@+id/usernameInput"
+            android:layout_alignEnd="@+id/usernameInput" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Username"
+            android:id="@+id/labelLoginUsername"
+            android:layout_above="@+id/usernameInput"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 </LinearLayout>
