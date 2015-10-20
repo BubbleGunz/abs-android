@@ -1,0 +1,5 @@
+20/10 - 2015
+Fixade Github så alla har tillgång till projektet.
+Wireframes - Interface guide
+Installerade SDK och Andorid Studio på alla datorer
+Gjorde så att vi kunde byta till en annan layout/activity
