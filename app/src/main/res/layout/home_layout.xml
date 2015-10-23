@@ -29,16 +29,22 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="350px"
+        android:layout_height="140dp"
         android:layout_below="@+id/labelHomeUsername"
-        android:text="Your Vacations"
-        android:id="@+id/btnHomeVacations" />
+        android:text="Profile"
+        android:id="@+id/btnHomeProfile" />
     <Button
         android:layout_width="match_parent"
-        android:layout_height="350px"
-        android:layout_below="@+id/btnHomeVacations"
+        android:layout_height="140dp"
+        android:layout_below="@+id/btnHomeProfile"
         android:text="Friends"
         android:id="@+id/btnHomeFriends" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_below="@+id/btnHomeFriends"
+        android:text="Log Out"
+        android:id="@+id/btnHomeLogout" />
 
 
 </RelativeLayout>

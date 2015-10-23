@@ -11,7 +11,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:id="@+id/loginBtn"
+            android:id="@+id/btnLoginLogin"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="128dp"
@@ -32,10 +32,10 @@
             android:id="@+id/usernameInput"
             android:layout_marginBottom="78dp"
             android:layout_above="@+id/passwordInput"
-            android:layout_alignLeft="@+id/loginBtn"
-            android:layout_alignStart="@+id/loginBtn"
-            android:layout_alignRight="@+id/loginBtn"
-            android:layout_alignEnd="@+id/loginBtn" />
+            android:layout_alignLeft="@+id/btnLoginLogin"
+            android:layout_alignStart="@+id/btnLoginLogin"
+            android:layout_alignRight="@+id/btnLoginLogin"
+            android:layout_alignEnd="@+id/btnLoginLogin" />
 
         <TextView
             android:layout_width="wrap_content"
