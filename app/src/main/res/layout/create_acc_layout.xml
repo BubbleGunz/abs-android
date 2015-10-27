@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:id="@+id/btnCreatAccSubmit"
+        android:layout_marginTop="79dp"
+        android:layout_below="@+id/labelCreateAccPassword"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Firstname:"
+        android:id="@+id/labelCreateAccFirstname"
+        android:layout_marginTop="85dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/btnCreatAccSubmit"
+        android:layout_toStartOf="@+id/btnCreatAccSubmit" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Lastname:"
+        android:id="@+id/labelCreateAccLastname"
+        android:layout_below="@+id/labelCreateAccFirstname"
+        android:layout_toLeftOf="@+id/btnCreatAccSubmit"
+        android:layout_toStartOf="@+id/btnCreatAccSubmit"
+        android:layout_marginTop="22dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Email:"
+        android:id="@+id/labelCreateAccEmail"
+        android:layout_marginTop="23dp"
+        android:layout_below="@+id/labelCreateAccLastname"
+        android:layout_alignRight="@+id/labelCreateUsername"
+        android:layout_alignEnd="@+id/labelCreateUsername" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Username:"
+        android:id="@+id/labelCreateUsername"
+        android:layout_below="@+id/labelCreateAccEmail"
+        android:layout_alignLeft="@+id/labelCreateAccLastname"
+        android:layout_alignStart="@+id/labelCreateAccLastname"
+        android:layout_marginTop="25dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Password:"
+        android:id="@+id/labelCreateAccPassword"
+        android:layout_marginTop="49dp"
+        android:layout_below="@+id/labelCreateUsername"
+        android:layout_alignRight="@+id/labelCreateUsername"
+        android:layout_alignEnd="@+id/labelCreateUsername" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Create Account"
+        android:id="@+id/labelCreateAccCreateAcc"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp" />
+
+</RelativeLayout>

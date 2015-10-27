@@ -32,7 +32,9 @@
         android:layout_height="140dp"
         android:layout_below="@+id/labelHomeUsername"
         android:text="Profile"
-        android:id="@+id/btnHomeProfile" />
+        android:id="@+id/btnHomeProfile"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="140dp"

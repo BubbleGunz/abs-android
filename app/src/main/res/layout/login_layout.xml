@@ -55,5 +55,17 @@
             android:id="@+id/labelLoginUsername"
             android:layout_above="@+id/usernameInput"
             android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Welcome"
+            android:id="@+id/labelLoginWelcome"
+            android:layout_above="@+id/labelLoginUsername"
+            android:layout_alignRight="@+id/usernameInput"
+            android:layout_alignEnd="@+id/usernameInput"
+            android:layout_marginBottom="30dp" />
+
     </RelativeLayout>
 </LinearLayout>
