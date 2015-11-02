@@ -17,12 +17,12 @@
 <ScrollView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_above="@+id/btnAddVacation"
     android:layout_alignParentRight="true"
     android:layout_alignParentEnd="true"
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
-    android:layout_below="@+id/labelProfileUsername">
+    android:layout_below="@+id/labelProfileUsername"
+    android:layout_alignParentBottom="true">
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -64,12 +64,11 @@
             android:id="@+id/vac4"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
 
 </ScrollView>
-
-
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -79,7 +78,8 @@
         android:id="@+id/btnAddVacation"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="#88d989" />
 
 
 </RelativeLayout>
