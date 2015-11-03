@@ -91,47 +91,59 @@
         android:id="@+id/inputCreateAccLayout">
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText" />
-
-        <EditText
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
+            android:inputType="text"
+            android:hint="Username"
             android:ems="10"
-            android:id="@+id/editText2" />
+            android:id="@+id/etUsername" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/editText6"
+            android:id="@+id/etPassword"
+            android:hint="Password"
             android:layout_gravity="center_horizontal" />
 
         <EditText
             android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/etConfirm"
+            android:hint="Confirm Password"
+            android:layout_gravity="center_horizontal" />
+
+        <EditText
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etFirstname"
+            android:hint="Firstname"
+            android:layout_gravity="center_horizontal"
+            android:inputType="text" />
+
+        <EditText
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Lastname"
+            android:id="@+id/etLastname"
+            android:inputType="text" />
+
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
-            android:id="@+id/editText3"
-            android:layout_gravity="center_horizontal" />
-
-        <EditText
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText4"
-            android:layout_gravity="center_horizontal" />
-
-        <EditText
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText5" />
+            android:ellipsize="start"
+            android:gravity="center|center_horizontal"
+            android:hint="Email"
+            android:id="@+id/etEmail" />
     </LinearLayout>
 
     <LinearLayout
@@ -160,7 +172,7 @@
             android:text="Create Account"
             android:padding="0dp"
             android:layout_margin="0dp"
-            android:id="@+id/button5"
+            android:id="@+id/btnCreateAccCreate"
             android:layout_weight="0.4"
             android:singleLine="false"
             android:background="#83da8d" />
