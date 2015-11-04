@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Android-Project</string>
+    <string name="app_name">VacBook</string>
     <string name="title_activity_add_friend">AddFriendActivity</string>
 </resources>

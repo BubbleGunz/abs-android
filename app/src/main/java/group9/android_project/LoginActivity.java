@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     Context c;
 
     EditText usernameInput;
-    EditText passwordInputInput;
+    EditText passwordInput;
     Button btnLoginLogin;
 
     @Override
@@ -41,32 +42,33 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
 
-        usernameInput = (EditText) findViewById(R.id.usernameInput);
-        passwordInputInput = (EditText) findViewById(R.id.passwordInput);
-        btnLoginLogin = (Button)findViewById(R.id.btnLoginLogin);
+        usernameInput = (EditText) findViewById(R.id.etUsername);
+        passwordInput = (EditText) findViewById(R.id.etPassword);
+        btnLoginLogin = (Button)findViewById(R.id.btnLogin);
 
-
+        usernameInput.setHintTextColor(getResources().getColor(R.color.white));
+        passwordInput.setHintTextColor(getResources().getColor(R.color.white));
         btnLoginLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                String username = usernameInput.getText()+"";
-                String password = usernameInput.getText()+"";
+                String username = usernameInput.getText() + "";
+                String password = usernameInput.getText() + "";
 
-                if(username.length() == 0 ||password.length() == 0)
+               /* if(username.length() == 0 ||password.length() == 0)
                 {
                     Toast.makeText(LoginActivity.this, "Please fill in username and password!", Toast.LENGTH_SHORT).show();
                     return;
-                }
-               // startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                }*/
+                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             }
         });
-
-        Button btnCreateAcc = (Button)findViewById(R.id.btnLoginCreateAcc);
-        btnCreateAcc.setOnClickListener(new View.OnClickListener() {
+        TextView signUp = (TextView)findViewById(R.id.tvSignUp);
+        signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, CreateAccActivity.class));
             }
         });
+
     }
 
 

@@ -83,6 +83,42 @@ public class CreateAccActivity extends AppCompatActivity {
                 }
                 Log.d("DEBUG",userObj.toString());
 
+                URL url = null;
+                try {
+                    url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/accounts");
+                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                    connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Content-Type", "application/json");
+                    connection.setDoOutput(true);
+                    connection.setChunkedStreamingMode(0);
+
+                    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                    writer.write(userObj.toString());
+                    writer.close();
+
+                    int responseCode = connection.getResponseCode();
+                    String output = "Request URL " + url;
+                    output += System.getProperty("line.seperator") + "Request Parameters ";
+                    output += System.getProperty("line.seperator") + "Response Code " + responseCode;
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String line = "";
+                    StringBuilder responseOutput = new StringBuilder();
+
+                    while((line = br.readLine()) != null){
+                        responseOutput.append(line);
+                    }
+                    br.close();
+
+                    output += System.getProperty("line.seperator") + responseOutput.toString();
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+
             }
         });
         Button btnBack = (Button)findViewById(R.id.btnCreateAccBack);
@@ -107,21 +143,7 @@ public class CreateAccActivity extends AppCompatActivity {
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 
 
-            int responseCode = connection.getResponseCode();
-            String output = "Request URL " + url;
-            output += System.getProperty("line.seperator") + "Request Parameters ";
-            output += System.getProperty("line.seperator") + "Response Code " + responseCode;
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = "";
-            StringBuilder responseOutput = new StringBuilder();
-
-            while((line = br.readLine()) != null){
-                responseOutput.append(line);
-            }
-            br.close();
-
-            output += System.getProperty("line.seperator") + responseOutput.toString();
 
 
         } catch (MalformedURLException e){
