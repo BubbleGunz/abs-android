@@ -1,6 +1,7 @@
 package group9.android_project;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -53,9 +54,26 @@ public class CreateAccActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.etEmail);
 
 
+
         Button btnCreate = (Button)findViewById(R.id.btnCreateAccCreate);
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        btnCreate.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v)
+            {
+
+                User user = new User();
+                user.username = username.getText().toString();
+                user.firstname = firstname.getText().toString();
+                user.lastname = lastname.getText().toString();
+                user.email = email.getText().toString();
+                user.password = password.getText().toString();
+                user.confirmpassword = confirmedPassword.getText().toString();
+                AsyncCall asc = new AsyncCall();
+                asc.execute("");
+
+            }
+
+
+
 
 
                /* if(username.getText() == null || password.getText() == null || confirmedPassword.getText() == null || firstname.getText() == null || lastname.getText()== null || email.getText() == null)
@@ -70,56 +88,7 @@ public class CreateAccActivity extends AppCompatActivity {
                     return;
                 }
 */
-                JSONObject userObj = new JSONObject();
-                try {
-                    userObj.put("username",username.getText().toString().trim());
-                    userObj.put("password", password.getText().toString().trim());
-                    userObj.put("confirmpassword", password.getText().toString().trim());;
-                    userObj.put("firstname", firstname.getText().toString().trim());
-                    userObj.put("lastname", lastname.getText().toString().trim());
-                    userObj.put("email", email.getText().toString().trim());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("DEBUG",userObj.toString());
 
-                URL url = null;
-                try {
-                    url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/accounts");
-                    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                    connection.setRequestMethod("POST");
-                    connection.setRequestProperty("Content-Type", "application/json");
-                    connection.setDoOutput(true);
-                    connection.setChunkedStreamingMode(0);
-
-                    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-                    writer.write(userObj.toString());
-                    writer.close();
-
-                    int responseCode = connection.getResponseCode();
-                    String output = "Request URL " + url;
-                    output += System.getProperty("line.seperator") + "Request Parameters ";
-                    output += System.getProperty("line.seperator") + "Response Code " + responseCode;
-
-                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    String line = "";
-                    StringBuilder responseOutput = new StringBuilder();
-
-                    while((line = br.readLine()) != null){
-                        responseOutput.append(line);
-                    }
-                    br.close();
-
-                    output += System.getProperty("line.seperator") + responseOutput.toString();
-
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-
-            }
         });
         Button btnBack = (Button)findViewById(R.id.btnCreateAccBack);
         btnBack.setOnClickListener(new View.OnClickListener() {

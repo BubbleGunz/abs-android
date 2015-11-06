@@ -53,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 String username = usernameInput.getText() + "";
                 String password = usernameInput.getText() + "";
-
                /* if(username.length() == 0 ||password.length() == 0)
                 {
                     Toast.makeText(LoginActivity.this, "Please fill in username and password!", Toast.LENGTH_SHORT).show();
