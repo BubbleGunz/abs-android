@@ -25,7 +25,8 @@
                 android:id="@+id/etUsername"
                 android:hint="Username"
                 android:textColor="#ffffff"
-                android:autoText="false" />
+                android:autoText="false"
+                android:textColorHint="#ffffff" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -34,7 +35,8 @@
                 android:ems="10"
                 android:id="@+id/etPassword"
                 android:hint="Password"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,23 +64,24 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Login"
-                android:id="@+id/btnLogin" />
+                android:id="@+id/btnLogin"
+                android:backgroundTint="#eee9e6" />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/forgotPasswordHolder">
+            android:id="@+id/singUpHolder">
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Sign up now"
                 android:gravity="center"
                 android:id="@+id/tvSignUp"
                 android:layout_weight="1"
-                android:textColor="#ffffff" />
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </LinearLayout>
 

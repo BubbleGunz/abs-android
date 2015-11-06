@@ -17,7 +17,7 @@ import java.util.Scanner;
  */
 public class ApiRequest {
 
-    public static User CreateUser(User user){
+    public static void CreateUser(User user){
         try
         {
             URL url = new URL("http://www.abs-cloud.elasticbeanstalk.com/api/v1/account/");
@@ -45,6 +45,6 @@ public class ApiRequest {
             throw new RuntimeException(e);
         }
 
-        return user;
+       
     }
 }

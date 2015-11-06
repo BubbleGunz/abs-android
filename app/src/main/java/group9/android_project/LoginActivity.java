@@ -46,8 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = (EditText) findViewById(R.id.etPassword);
         btnLoginLogin = (Button)findViewById(R.id.btnLogin);
 
-        usernameInput.setHintTextColor(getResources().getColor(R.color.white));
-        passwordInput.setHintTextColor(getResources().getColor(R.color.white));
+
         btnLoginLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 

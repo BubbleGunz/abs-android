@@ -55,28 +55,31 @@ public class CreateAccActivity extends AppCompatActivity {
 
 
 
+
+
+
         Button btnCreate = (Button)findViewById(R.id.btnCreateAccCreate);
         btnCreate.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v)
             {
-
-                User user = new User();
-                user.username = username.getText().toString();
-                user.firstname = firstname.getText().toString();
-                user.lastname = lastname.getText().toString();
-                user.email = email.getText().toString();
-                user.password = password.getText().toString();
-                user.confirmpassword = confirmedPassword.getText().toString();
                 AsyncCall asc = new AsyncCall();
-                asc.execute("");
+                asc.execute("CreateUser");
 
             }
 
+        });
+    }
 
+    public User GetUserInfo(){
+        User user = new User();
+        user.username = username.getText().toString();
+        user.firstname = firstname.getText().toString();
+        user.lastname = lastname.getText().toString();
+        user.email = email.getText().toString();
+        user.password = password.getText().toString();
+        user.confirmpassword = confirmedPassword.getText().toString();
 
-
-
-               /* if(username.getText() == null || password.getText() == null || confirmedPassword.getText() == null || firstname.getText() == null || lastname.getText()== null || email.getText() == null)
+                       /* if(username.getText() == null || password.getText() == null || confirmedPassword.getText() == null || firstname.getText() == null || lastname.getText()== null || email.getText() == null)
                 {
                     Toast.makeText(CreateAccActivity.this, "Please fill all input fields!", Toast.LENGTH_SHORT).show();
                     return;
@@ -86,41 +89,7 @@ public class CreateAccActivity extends AppCompatActivity {
                 {
                     Toast.makeText(CreateAccActivity.this, "Password doesnt match!", Toast.LENGTH_SHORT).show();
                     return;
-                }
-*/
-
-        });
-        Button btnBack = (Button)findViewById(R.id.btnCreateAccBack);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(CreateAccActivity.this, LoginActivity.class));
-            }
-        });
-
+                }*/
+        return user;
     }
-
-    private void createAccount()
-    {
-        try{
-            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/accounts");
-            HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
-            connection.setChunkedStreamingMode(0);
-
-            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-
-
-
-
-
-        } catch (MalformedURLException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-
 }
