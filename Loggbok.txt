@@ -25,6 +25,9 @@ Stor framgång med api, bara att köra async kvar
 6/11
 Försökte ge oss på Async,lite progress
 
+9/11
+Löste att createa account till API, påbörjade med att skaffa en token.
+
 
 
 
