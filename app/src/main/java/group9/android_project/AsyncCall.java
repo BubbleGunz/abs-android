@@ -4,20 +4,22 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Switch;
 
+import org.json.JSONObject;
+
 /**
  * Created by Benjamin on 2015-11-06.
  */
-public class AsyncCall extends AsyncTask<String,Void,Void> {
+public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,Void> {
     @Override
-    protected Void doInBackground(String... params) {
-        String sw = params[0];
+    protected Void doInBackground(AsyncCallInfo... params) {
+        String sw = params[0].command;
         Log.d("In background ",sw);
-        User user = new User();
+        JSONObject user = params[0].userInfo;
         switch(sw){
             case "CreateUser" :
             {
-                CreateAccActivity caa = new CreateAccActivity();
-                user = caa.GetUserInfo();
+                //CreateAccActivity caa = new CreateAccActivity();
+                //user = caa.GetUserInfo();
                 ApiRequest.CreateUser(user);
                 break;
             }

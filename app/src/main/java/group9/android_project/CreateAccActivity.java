@@ -62,17 +62,32 @@ public class CreateAccActivity extends AppCompatActivity {
         btnCreate.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v)
             {
+                AsyncCallInfo info = new AsyncCallInfo();
+                info.command = "CreateUser";
+                info.userInfo = GetUserInfo();
                 AsyncCall asc = new AsyncCall();
-                asc.execute("CreateUser");
+                asc.execute(info);
 
             }
 
         });
     }
 
-    public User GetUserInfo(){
-        User user = new User();
-        user.username = username.getText().toString();
+    public JSONObject GetUserInfo(){
+        JSONObject userObject = new JSONObject();
+        try{
+            userObject.put("username",username.getText().toString());
+            userObject.put("password",password.getText().toString());
+            userObject.put("confirmpassword",confirmedPassword.getText().toString());
+            userObject.put("firstname",firstname.getText().toString());
+            userObject.put("lastname",lastname.getText().toString());
+            userObject.put("email",email.getText().toString());
+
+        }catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        /*user.username = username.getText().toString();
         user.firstname = firstname.getText().toString();
         user.lastname = lastname.getText().toString();
         user.email = email.getText().toString();
@@ -90,6 +105,6 @@ public class CreateAccActivity extends AppCompatActivity {
                     Toast.makeText(CreateAccActivity.this, "Password doesnt match!", Toast.LENGTH_SHORT).show();
                     return;
                 }*/
-        return user;
+        return userObject;
     }
 }

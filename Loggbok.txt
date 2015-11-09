@@ -3,3 +3,28 @@ Fixade Github så alla har tillgång till projektet.
 Wireframes - Interface guide
 Installerade SDK och Andorid Studio på alla datorer
 Gjorde så att vi kunde byta till en annan layout/activity
+
+27/10 
+Gjorde om wireframesen efter projektmötet
+
+29/10
+Gjorde om de olika activitiesen
+Kollade på internal storage
+
+3/11
+Projektmöte, planen var att lösa API till nästa vecka
+Försöka koppla appen till API:t, gick sådär, földje guider på youtube...
+
+4/11
+Fortsatte försöka lösa problemet med API, lite framgång
+
+5/11
+Design på login
+Stor framgång med api, bara att köra async kvar
+
+6/11
+Försökte ge oss på Async,lite progress
+
+
+
+
