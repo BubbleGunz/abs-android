@@ -14,18 +14,19 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,Void> {
     protected Void doInBackground(AsyncCallInfo... params) {
         String sw = params[0].command;
         Log.d("In background ",sw);
-        JSONObject user = params[0].userInfo;
+
+
         switch(sw){
             case "CreateUser" :
             {
-                //CreateAccActivity caa = new CreateAccActivity();
-                //user = caa.GetUserInfo();
-                ApiRequest.CreateUser(user);
+                JSONObject json = params[0].userInfo;
+                ApiRequest.CreateUser(json);
                 break;
             }
             case "GetToken":
             {
-                ApiRequest.CreateUser(user);
+                AccessToken token = params[0].token;
+                ApiRequest.GetToken(token);
                 break;
             }
             default:{

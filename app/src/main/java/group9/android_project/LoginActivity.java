@@ -20,6 +20,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +35,8 @@ public class LoginActivity extends AppCompatActivity {
 
     Context c;
 
-    EditText usernameInput;
-    EditText passwordInput;
+    EditText username;
+    EditText password;
     Button btnLoginLogin;
 
     @Override
@@ -42,21 +44,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
 
-        usernameInput = (EditText) findViewById(R.id.etUsername);
-        passwordInput = (EditText) findViewById(R.id.etPassword);
+        username = (EditText) findViewById(R.id.etUsername);
+        password = (EditText) findViewById(R.id.etPassword);
         btnLoginLogin = (Button)findViewById(R.id.btnLogin);
 
 
         btnLoginLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                String username = usernameInput.getText() + "";
-                String password = usernameInput.getText() + "";
+
                /* if(username.length() == 0 ||password.length() == 0)
                 {
                     Toast.makeText(LoginActivity.this, "Please fill in username and password!", Toast.LENGTH_SHORT).show();
                     return;
                 }*/
+                AsyncCallInfo info = new AsyncCallInfo();
+                info.command = "GetToken";
+                info.token = GetLoginInfo();
+                AsyncCall asc = new AsyncCall();
+                asc.execute(info);
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             }
         });
@@ -67,6 +73,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public AccessToken GetLoginInfo(){
+        AccessToken token = new AccessToken();
+        token.username = username.getText().toString();
+        token.password = password.getText().toString();
+
+
+        /* if(username.getText() == null || password.getText() == null || confirmedPassword.getText() == null || firstname.getText() == null || lastname.getText()== null || email.getText() == null)
+                {
+                    Toast.makeText(CreateAccActivity.this, "Please fill all input fields!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (password.getText() != confirmedPassword.getText())
+                {
+                    Toast.makeText(CreateAccActivity.this, "Password doesnt match!", Toast.LENGTH_SHORT).show();
+                    return;
+                }*/
+        return token;
     }
 
 

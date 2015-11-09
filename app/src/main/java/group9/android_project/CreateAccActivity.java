@@ -74,14 +74,14 @@ public class CreateAccActivity extends AppCompatActivity {
     }
 
     public JSONObject GetUserInfo(){
-        JSONObject userObject = new JSONObject();
+        JSONObject json = new JSONObject();
         try{
-            userObject.put("username",username.getText().toString());
-            userObject.put("password",password.getText().toString());
-            userObject.put("confirmpassword",confirmedPassword.getText().toString());
-            userObject.put("firstname",firstname.getText().toString());
-            userObject.put("lastname",lastname.getText().toString());
-            userObject.put("email",email.getText().toString());
+            json.put("username",username.getText().toString());
+            json.put("password",password.getText().toString());
+            json.put("confirmpassword",confirmedPassword.getText().toString());
+            json.put("firstname",firstname.getText().toString());
+            json.put("lastname",lastname.getText().toString());
+            json.put("email",email.getText().toString());
 
         }catch (JSONException e)
         {
@@ -105,6 +105,6 @@ public class CreateAccActivity extends AppCompatActivity {
                     Toast.makeText(CreateAccActivity.this, "Password doesnt match!", Toast.LENGTH_SHORT).show();
                     return;
                 }*/
-        return userObject;
+        return json;
     }
 }

@@ -8,4 +8,5 @@ import org.json.JSONObject;
 public class AsyncCallInfo {
     public String command;
     public JSONObject userInfo;
+    public AccessToken token;
 }
