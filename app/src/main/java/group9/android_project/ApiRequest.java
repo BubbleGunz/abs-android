@@ -1,14 +1,19 @@
 package group9.android_project;
 
 import android.os.AsyncTask;
+import android.util.JsonReader;
 import android.util.Log;
 
+import org.apache.http.HttpResponse;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -82,18 +87,33 @@ public class ApiRequest {
             os.close();
 
             int code = urlConnection.getResponseCode();
+            JSONObject resp = new JSONObject();
+            InputStream is = urlConnection.getInputStream();
+            String acc ="";
+            InputStreamReader isr = new InputStreamReader(is);
+            //JsonReader jReader = new JsonReader(new InputStreamReader(is));
+            try {
+                resp = new JSONObject(is.toString());
+                acc = (String) resp.get("access-tolken");
 
-            Scanner scan = new Scanner(urlConnection.getInputStream());
-            Log.d("Code", ""+code);
-
-            ArrayList<String> stringArr = new ArrayList<String>();
-            while(scan.hasNextLine()) {
-                 stringArr.add(scan.nextLine());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
 
 
-            scan.close();
+
+            //Scanner scan = new Scanner(urlConnection.getInputStream());
+            Log.d("Code", ""+code);
+            Log.d("token",""+acc);
+
+            /*ArrayList<String> stringArr = new ArrayList<String>();
+            while(scan.hasNextLine()) {
+                 stringArr.add(scan.nextLine());
+            }
+            scan.close();*/
+
+
             urlConnection.disconnect();
         }
         catch (IOException e)
