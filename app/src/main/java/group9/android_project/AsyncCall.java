@@ -26,7 +26,7 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,Void> {
             case "GetToken":
             {
                 AccessToken token = params[0].token;
-                ApiRequest.GetToken(token);
+                ApiRequest.GetToken(token,params[0].context);
                 break;
             }
             default:{

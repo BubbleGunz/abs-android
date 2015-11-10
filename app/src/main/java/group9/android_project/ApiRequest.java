@@ -1,6 +1,9 @@
 package group9.android_project;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.JsonReader;
 import android.util.Log;
 
@@ -26,7 +29,8 @@ import java.util.Scanner;
  * Created by Benjamin on 2015-11-05.
  */
 public class ApiRequest {
-
+    public Context context;
+    public static final String PREFS_NAME="USER_PREFS";
     public static void CreateUser(JSONObject user){
         try
         {
@@ -40,15 +44,6 @@ public class ApiRequest {
             OutputStreamWriter osw = new OutputStreamWriter(os);
 
             osw.write(user.toString());
-            /*osw.write("{ " +
-                        "\"username\": \"" + user.username + "\" , " +
-                        "\"password\":\""+ user.password +"\" ," +
-                        "\"confirmpassword\":\""+user.confirmpassword+"\" ," +
-                        "\"firstname\":\""+user.firstname+"\"," +
-                        "\"lastname\":\""+user.lastname+"\"," +
-                        "\"email\":\""+user.email+"\"" +
-                     "}");
-                     */
             osw.close();
             os.close();
 
@@ -70,9 +65,11 @@ public class ApiRequest {
 
        
     }
-    public static void GetToken(AccessToken token){
+    public static void GetToken(AccessToken token,Context context){
+
         try
         {
+            //region CONNECTION
             URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/token");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
@@ -85,6 +82,7 @@ public class ApiRequest {
             osw.write("grant_type=password&username=" + token.username + "&password=" + token.password);
             osw.close();
             os.close();
+
 
             int code = urlConnection.getResponseCode();
             BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -112,8 +110,8 @@ public class ApiRequest {
 
 
             //Scanner scan = new Scanner(urlConnection.getInputStream());
-            Log.d("Code", ""+code);
-            Log.d("Accestoken",accessToken);
+            Log.d("Code", "" + code);
+            Log.d("Accestoken", accessToken);
 
 
             /*ArrayList<String> stringArr = new ArrayList<String>();
@@ -124,11 +122,15 @@ public class ApiRequest {
 
 
             urlConnection.disconnect();
+            //endregion
+            sharedPref.setUser(context,token.username,token.password,accessToken);
+
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
+
 
 
     }

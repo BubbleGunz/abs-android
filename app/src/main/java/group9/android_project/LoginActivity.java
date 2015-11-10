@@ -1,5 +1,6 @@
 package group9.android_project;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText password;
     Button btnLoginLogin;
 
+    Context context = this;
+
     @Override
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -61,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 AsyncCallInfo info = new AsyncCallInfo();
                 info.command = "GetToken";
                 info.token = GetLoginInfo();
+                info.context = context;
                 AsyncCall asc = new AsyncCall();
                 asc.execute(info);
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));

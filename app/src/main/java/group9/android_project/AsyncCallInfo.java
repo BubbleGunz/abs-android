@@ -1,5 +1,7 @@
 package group9.android_project;
 
+import android.content.Context;
+
 import org.json.JSONObject;
 
 /**
@@ -9,4 +11,5 @@ public class AsyncCallInfo {
     public String command;
     public JSONObject userInfo;
     public AccessToken token;
+    public Context context;
 }
