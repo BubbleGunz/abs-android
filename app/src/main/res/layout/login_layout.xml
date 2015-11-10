@@ -26,7 +26,8 @@
                 android:textColor="#ffffff"
                 android:autoText="false"
                 android:textColorHint="#ffffff"
-                android:inputType="text" />
+                android:inputType="text"
+                android:text="pase" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -36,7 +37,8 @@
                 android:id="@+id/etPassword"
                 android:hint="Password"
                 android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
+                android:textColorHint="#ffffff"
+                android:text="saxsaxsax" />
         </LinearLayout>
 
         <LinearLayout

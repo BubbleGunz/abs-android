@@ -87,25 +87,34 @@ public class ApiRequest {
             os.close();
 
             int code = urlConnection.getResponseCode();
-            JSONObject resp = new JSONObject();
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             InputStream is = urlConnection.getInputStream();
-            String acc ="";
-            InputStreamReader isr = new InputStreamReader(is);
-            //JsonReader jReader = new JsonReader(new InputStreamReader(is));
-            try {
-                resp = new JSONObject(is.toString());
-                acc = (String) resp.get("access-tolken");
+            StringBuilder sb = new StringBuilder();
 
+            String line;
+            br = new BufferedReader(new InputStreamReader(is));
+            JSONObject json = new JSONObject();
+            String accessToken = new String();
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            try {
+                 json = new JSONObject(sb.toString());
+            }catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+            try {
+                accessToken = json.getString("access_token");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
 
-
-
             //Scanner scan = new Scanner(urlConnection.getInputStream());
             Log.d("Code", ""+code);
-            Log.d("token",""+acc);
+            Log.d("Accestoken",accessToken);
+
 
             /*ArrayList<String> stringArr = new ArrayList<String>();
             while(scan.hasNextLine()) {
