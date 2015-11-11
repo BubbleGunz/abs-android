@@ -28,6 +28,13 @@ Försökte ge oss på Async,lite progress
 9/11
 Löste att createa account till API, påbörjade med att skaffa en token.
 
+10/11
+Kunde hämta repsonse, token som objekt, spara på enheten
+
+11/11
+Fixade tokendate expires efter en dag, har dock problem med att skicka tillbaka responsesn från doinbackground
+
+
 
 
 

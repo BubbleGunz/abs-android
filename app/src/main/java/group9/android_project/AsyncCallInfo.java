@@ -10,6 +10,6 @@ import org.json.JSONObject;
 public class AsyncCallInfo {
     public String command;
     public JSONObject userInfo;
-    public AccessToken token;
+    public User user;
     public Context context;
 }

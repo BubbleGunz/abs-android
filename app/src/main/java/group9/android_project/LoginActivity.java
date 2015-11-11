@@ -62,13 +62,16 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Please fill in username and password!", Toast.LENGTH_SHORT).show();
                     return;
                 }*/
+                //SharedPref.clearPrefs(LoginActivity.this);
                 AsyncCallInfo info = new AsyncCallInfo();
                 info.command = "GetToken";
-                info.token = GetLoginInfo();
+                info.user = GetLoginInfo();
                 info.context = context;
                 AsyncCall asc = new AsyncCall();
                 asc.execute(info);
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+
+
             }
         });
         TextView signUp = (TextView)findViewById(R.id.tvSignUp);
@@ -79,10 +82,10 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
-    public AccessToken GetLoginInfo(){
-        AccessToken token = new AccessToken();
-        token.username = username.getText().toString();
-        token.password = password.getText().toString();
+    public User GetLoginInfo(){
+        User user = new User();
+        user.username = username.getText().toString();
+        user.password = password.getText().toString();
 
 
         /* if(username.getText() == null || password.getText() == null || confirmedPassword.getText() == null || firstname.getText() == null || lastname.getText()== null || email.getText() == null)
@@ -96,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(CreateAccActivity.this, "Password doesnt match!", Toast.LENGTH_SHORT).show();
                     return;
                 }*/
-        return token;
+        return user;
     }
 
 

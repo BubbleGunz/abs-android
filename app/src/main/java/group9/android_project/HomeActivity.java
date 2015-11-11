@@ -18,8 +18,15 @@ public class HomeActivity extends AppCompatActivity{
 
         TextView labelUsername = (TextView)findViewById(R.id.labelHomeUsername);
 
-        String username = sharedPref.getUsername(this);
-        labelUsername.setText(username);
+        User user = SharedPref.GetUserPw(this);
+        labelUsername.setText(user.username);
+
+        boolean validToken = CheckValidToken.checkToken(this);
+        if(!validToken)
+        {
+            CheckValidToken.RefreshToken(this);// FRÅGA HUR VI FÅR TILLBAKA RESPONSEN FRÅN DOINBACKGROUND
+            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+        }
 
 
         Button btnFriends = (Button)findViewById(R.id.btnHomeFriends);
@@ -29,13 +36,6 @@ public class HomeActivity extends AppCompatActivity{
             }
         });
 
-
-        Button btnProfile = (Button)findViewById(R.id.btnHomeProfile);
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
-            }
-        });
     }
 
 }

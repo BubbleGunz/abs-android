@@ -2,6 +2,7 @@ package group9.android_project;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.session.MediaSession;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.JsonReader;
@@ -23,6 +24,8 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -31,9 +34,10 @@ import java.util.Scanner;
 public class ApiRequest {
     public Context context;
     public static final String PREFS_NAME="USER_PREFS";
-    public static void CreateUser(JSONObject user){
+    public static JSONObject CreateUser(JSONObject user){
         try
         {
+            //region CONNECTION
             URL url = new URL("http://www.abs-cloud.elasticbeanstalk.com/api/v1/accounts/");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
@@ -48,15 +52,29 @@ public class ApiRequest {
             os.close();
 
             int code = urlConnection.getResponseCode();
-
-            //Scanner scan = new Scanner(urlConnection.getInputStream());
             Log.d("Code", ""+code);
 
-            //Log.d("API", scan.nextLine());
-
-
-            //scan.close();
             urlConnection.disconnect();
+            //endregion
+            JSONObject jsonResponse = new JSONObject();
+            if(code >199 || code < 300) {
+                try {
+                    jsonResponse.put("message","Account created!");
+                    jsonResponse.put("code",code);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonResponse;
+            }
+            else{
+                try {
+                    jsonResponse.put("message","Couldnt create account!");
+                    jsonResponse.put("code",code);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonResponse;
+            }
         }
         catch (IOException e)
         {
@@ -65,7 +83,7 @@ public class ApiRequest {
 
        
     }
-    public static void GetToken(AccessToken token,Context context){
+    public static JSONObject GetToken(User user,Context context){
 
         try
         {
@@ -79,7 +97,7 @@ public class ApiRequest {
             urlConnection.addRequestProperty("Accept", "application/json");
             OutputStream os = urlConnection.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
-            osw.write("grant_type=password&username=" + token.username + "&password=" + token.password);
+            osw.write("grant_type=password&username=" + user.username + "&password=" + user.password);
             osw.close();
             os.close();
 
@@ -108,30 +126,44 @@ public class ApiRequest {
                 e.printStackTrace();
             }
 
-
-            //Scanner scan = new Scanner(urlConnection.getInputStream());
             Log.d("Code", "" + code);
             Log.d("Accestoken", accessToken);
 
-
-            /*ArrayList<String> stringArr = new ArrayList<String>();
-            while(scan.hasNextLine()) {
-                 stringArr.add(scan.nextLine());
-            }
-            scan.close();*/
-
-
             urlConnection.disconnect();
             //endregion
-            sharedPref.setUser(context,token.username,token.password,accessToken);
+
+            JSONObject jsonResponse = new JSONObject();
+            if(code >199 || code < 300) {
+                try {
+                    jsonResponse.put("message","Token Created!");
+                    jsonResponse.put("context",context);
+                    jsonResponse.put("code",code);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Calendar tokenDate = Calendar.getInstance();
+                Date date = new Date();
+                tokenDate.setTime(date);
+                tokenDate.add(Calendar.DATE,1);
+                date = tokenDate.getTime();
+                SharedPref.setUser(context,user.username,user.password,date,accessToken);
+                return jsonResponse;
+            }
+            else{
+                try {
+                    jsonResponse.put("message","Couldnt get token!");
+                    jsonResponse.put("code",code);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return json;
+            }
 
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
-
-
-
     }
 }

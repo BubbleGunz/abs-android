@@ -53,11 +53,6 @@ public class CreateAccActivity extends AppCompatActivity {
         lastname = (EditText) findViewById(R.id.etUsername);
         email = (EditText) findViewById(R.id.etEmail);
 
-
-
-
-
-
         Button btnCreate = (Button)findViewById(R.id.btnCreateAccCreate);
         btnCreate.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v)

@@ -1,17 +1,22 @@
 package group9.android_project;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Switch;
+import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by Benjamin on 2015-11-06.
  */
-public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,Void> {
+public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
     @Override
-    protected Void doInBackground(AsyncCallInfo... params) {
+    protected JSONObject doInBackground(AsyncCallInfo... params) {
         String sw = params[0].command;
         Log.d("In background ",sw);
 
@@ -20,14 +25,14 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,Void> {
             case "CreateUser" :
             {
                 JSONObject json = params[0].userInfo;
-                ApiRequest.CreateUser(json);
-                break;
+                JSONObject response = ApiRequest.CreateUser(json);
+                return response;
             }
             case "GetToken":
             {
-                AccessToken token = params[0].token;
-                ApiRequest.GetToken(token,params[0].context);
-                break;
+                User user = params[0].user;
+                JSONObject response = ApiRequest.GetToken(user,params[0].context);
+                return response;
             }
             default:{
                 break;
@@ -36,6 +41,27 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,Void> {
         }
 
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(JSONObject jsonObject) {
+        super.onPostExecute(jsonObject);
+        try {
+            int code = (int)jsonObject.get("code");
+            Context context = (Context)jsonObject.get("context");
+            if(code >199 || code <300)
+            {
+                Toast.makeText(context, jsonObject.get("message").toString(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            else{
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
