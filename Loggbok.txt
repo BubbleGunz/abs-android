@@ -34,6 +34,9 @@ Kunde hämta repsonse, token som objekt, spara på enheten
 11/11
 Fixade tokendate expires efter en dag, har dock problem med att skicka tillbaka responsesn från doinbackground
 
+12/11
+Errormessage fixat i Asynccall,Fixat med responesen från doinbackgjorund med hjälp av postonexecute
+
 
 
 
