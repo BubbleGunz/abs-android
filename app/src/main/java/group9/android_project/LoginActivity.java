@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
+//SharedPref.clearPrefs(LoginActivity.this);
 
         username = (EditText) findViewById(R.id.etUsername);
         password = (EditText) findViewById(R.id.etPassword);
@@ -56,20 +57,33 @@ public class LoginActivity extends AppCompatActivity {
         btnLoginLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-
-               /* if(username.length() == 0 ||password.length() == 0)
-                {
-                    Toast.makeText(LoginActivity.this, "Please fill in username and password!", Toast.LENGTH_SHORT).show();
-                    return;
-                }*/
-                //SharedPref.clearPrefs(LoginActivity.this);
                 AsyncCallInfo info = new AsyncCallInfo();
                 info.command = "GetToken";
                 info.user = GetLoginInfo();
                 info.context = context;
-                AsyncCall asc = new AsyncCall();
+                AsyncCall asc = new AsyncCall(){
+                    @Override
+                    protected void onPostExecute(JSONObject jsonObject) {
+
+                        try {
+                            int code = (int)jsonObject.get("code");
+                            String ResponseMsg = (String)jsonObject.get("message");
+
+                            if(code == 200) {
+                                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            }
+                            else{
+                                Toast.makeText(LoginActivity.this, "Wrong username or password!", Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                };
                 asc.execute(info);
-                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
 
             }

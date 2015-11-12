@@ -43,26 +43,6 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
         return null;
     }
 
-    @Override
-    protected void onPostExecute(JSONObject jsonObject) {
-        super.onPostExecute(jsonObject);
-        try {
-            int code = (int)jsonObject.get("code");
-            Context context = (Context)jsonObject.get("context");
-            if(code >199 || code <300)
-            {
-                Toast.makeText(context, jsonObject.get("message").toString(), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else{
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
     @Override
     protected void onProgressUpdate(Void... values) {

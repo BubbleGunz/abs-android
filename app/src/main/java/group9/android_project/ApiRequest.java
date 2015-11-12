@@ -34,6 +34,8 @@ import java.util.Scanner;
 public class ApiRequest {
     public Context context;
     public static final String PREFS_NAME="USER_PREFS";
+
+    //Return JsonObj with message and code
     public static JSONObject CreateUser(JSONObject user){
         try
         {
@@ -83,8 +85,10 @@ public class ApiRequest {
 
        
     }
-    public static JSONObject GetToken(User user,Context context){
 
+    //Returns a JsonObj with token,code,message && Saves userinfo in sharedprefs
+    public static JSONObject GetToken(User user,Context context){
+        JSONObject json = new JSONObject();
         try
         {
             //region CONNECTION
@@ -93,6 +97,7 @@ public class ApiRequest {
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
             urlConnection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlConnection.addRequestProperty("Accept", "application/json");
             OutputStream os = urlConnection.getOutputStream();
@@ -103,67 +108,88 @@ public class ApiRequest {
 
 
             int code = urlConnection.getResponseCode();
-            BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            InputStream is = urlConnection.getInputStream();
             StringBuilder sb = new StringBuilder();
+            if(code == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
 
-            String line;
-            br = new BufferedReader(new InputStreamReader(is));
-            JSONObject json = new JSONObject();
-            String accessToken = new String();
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            try {
-                 json = new JSONObject(sb.toString());
-            }catch (JSONException e)
-            {
-                e.printStackTrace();
-            }
-            try {
-                accessToken = json.getString("access_token");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                String line;
 
-            Log.d("Code", "" + code);
-            Log.d("Accestoken", accessToken);
-
-            urlConnection.disconnect();
-            //endregion
-
-            JSONObject jsonResponse = new JSONObject();
-            if(code >199 || code < 300) {
-                try {
-                    jsonResponse.put("message","Token Created!");
-                    jsonResponse.put("context",context);
-                    jsonResponse.put("code",code);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
                 }
-                Calendar tokenDate = Calendar.getInstance();
-                Date date = new Date();
-                tokenDate.setTime(date);
-                tokenDate.add(Calendar.DATE,1);
-                date = tokenDate.getTime();
-                SharedPref.setUser(context,user.username,user.password,date,accessToken);
-                return jsonResponse;
+                br.close();
             }
             else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+            }
+
+
+
+
+
+
+
+            if(code == 200) {
                 try {
-                    jsonResponse.put("message","Couldnt get token!");
-                    jsonResponse.put("code",code);
+                    json = new JSONObject(sb.toString());
+                    String accessToken = json.getString("access_token");
+
+                    Calendar tokenDate = Calendar.getInstance();
+                    Date date = new Date();
+                    tokenDate.setTime(date);
+                    tokenDate.add(Calendar.DATE, 1);
+                    date = tokenDate.getTime();
+                    SharedPref.setUser(context, user.username, user.password, date, accessToken);
+
+                    json = new JSONObject();
+                    json.put("message", "Token Created!");
+                    json.put("code", code);
+                    json.put("token", accessToken);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                } finally {
+                    urlConnection.disconnect();
+                    return json;
 
-                return json;
+                }
             }
+            else{
+
+                try {
+                    json = new JSONObject(sb.toString());
+                    String error = json.getString("error_description");
+                    json = new JSONObject();
+                    json.put("message", error);
+                    json.put("code", code);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                    urlConnection.disconnect();
+                    return json;
+
+                }
+            }
+            //endregion
 
         }
         catch (IOException e)
         {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return json;
     }
+
+
+
 }
