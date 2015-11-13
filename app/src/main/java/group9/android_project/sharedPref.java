@@ -18,10 +18,13 @@ public class SharedPref {
     private static SharedPreferences getPrefs(Context context){
         return context.getSharedPreferences(PREF_NAME,Context.MODE_PRIVATE);
     }
+    public static String GetUsername (Context context) {
+        return getPrefs(context).getString("username_key", "");
+    }
     public static User GetUserPw (Context context){
         User user = new User();
-        user.username = getPrefs(context).getString("username_key", "default_username");
-        user.password = getPrefs(context).getString("password_key", "default_password");
+        user.username = getPrefs(context).getString("username_key", "");
+        user.password = getPrefs(context).getString("password_key", "");
         return user;
     }
     public static User GetTokenInfo (Context context){

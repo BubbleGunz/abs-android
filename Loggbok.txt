@@ -37,6 +37,8 @@ Fixade tokendate expires efter en dag, har dock problem med att skicka tillbaka 
 12/11
 Errormessage fixat i Asynccall,Fixat med responesen från doinbackgjorund med hjälp av postonexecute
 
+13/11
+Hämta vänner fungerar, satt med JsonArray och lärde oss hur vi använde den
 
 
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -45,12 +46,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.login_layout);
-//SharedPref.clearPrefs(LoginActivity.this);
 
         username = (EditText) findViewById(R.id.etUsername);
         password = (EditText) findViewById(R.id.etPassword);
         btnLoginLogin = (Button)findViewById(R.id.btnLogin);
+        User user = SharedPref.GetUserPw(context);
+        if(user.username != null)
+        {
+            username.setText(user.username);
+        }
 
 
 
@@ -98,8 +104,9 @@ public class LoginActivity extends AppCompatActivity {
     }
     public User GetLoginInfo(){
         User user = new User();
-        user.username = username.getText().toString();
-        user.password = password.getText().toString();
+        user.username = username.getText().toString().trim();
+        String hashedPw = HashPassword.GetSecurePassword(password.getText().toString());
+        user.password = hashedPw;
 
 
         /* if(username.getText() == null || password.getText() == null || confirmedPassword.getText() == null || firstname.getText() == null || lastname.getText()== null || email.getText() == null)

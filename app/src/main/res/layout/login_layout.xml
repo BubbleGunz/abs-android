@@ -27,7 +27,7 @@
                 android:autoText="false"
                 android:textColorHint="#ffffff"
                 android:inputType="text"
-                android:text="pase" />
+                android:text="llala" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -38,7 +38,7 @@
                 android:hint="Password"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:text="saxsaxsax" />
+                android:text="hahahaha" />
         </LinearLayout>
 
         <LinearLayout
@@ -80,10 +80,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign up now"
-                android:gravity="center"
+                android:gravity="right"
                 android:id="@+id/tvSignUp"
                 android:layout_weight="1"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:layout_marginTop="40dp" />
         </LinearLayout>
     </LinearLayout>
 

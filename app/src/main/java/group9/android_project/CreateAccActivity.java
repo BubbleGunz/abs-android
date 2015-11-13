@@ -49,8 +49,8 @@ public class CreateAccActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.etUsername);
         password = (EditText) findViewById(R.id.etPassword);
         confirmedPassword = (EditText) findViewById(R.id.etConfirm);
-        firstname = (EditText) findViewById(R.id.etLastname);
-        lastname = (EditText) findViewById(R.id.etUsername);
+        firstname = (EditText) findViewById(R.id.etFirstname);
+        lastname = (EditText) findViewById(R.id.etLastname);
         email = (EditText) findViewById(R.id.etEmail);
 
         Button btnCreate = (Button)findViewById(R.id.btnCreateAccCreate);
@@ -71,12 +71,14 @@ public class CreateAccActivity extends AppCompatActivity {
     public JSONObject GetUserInfo(){
         JSONObject json = new JSONObject();
         try{
-            json.put("username",username.getText().toString());
-            json.put("password",password.getText().toString());
-            json.put("confirmpassword",confirmedPassword.getText().toString());
-            json.put("firstname",firstname.getText().toString());
-            json.put("lastname",lastname.getText().toString());
-            json.put("email",email.getText().toString());
+            json.put("username", username.getText().toString().trim());
+            String hashedPw = HashPassword.GetSecurePassword(password.getText().toString());
+            json.put("password", hashedPw);
+            String hashedPwConfirmed = HashPassword.GetSecurePassword(confirmedPassword.getText().toString());
+            json.put("confirmpassword",hashedPwConfirmed);
+            json.put("firstname",firstname.getText().toString().trim());
+            json.put("lastname",lastname.getText().toString().trim());
+            json.put("email",email.getText().toString().trim());
 
         }catch (JSONException e)
         {

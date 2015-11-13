@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,6 +35,10 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 JSONObject response = ApiRequest.GetToken(user,params[0].context);
                 return response;
             }
+            case "GetFriends":
+            {
+
+            }
             default:{
                 break;
             }
@@ -49,3 +54,4 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
         super.onProgressUpdate(values);
     }
 }
+

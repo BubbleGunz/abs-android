@@ -24,11 +24,14 @@ public class HomeActivity extends AppCompatActivity{
 
         TextView labelUsername = (TextView)findViewById(R.id.labelHomeUsername);
 
-        User user = SharedPref.GetUserPw(this);
-        labelUsername.setText(user.username);
+
 
         boolean isTokenValid = TokenHandler.checkToken(this);
-        isTokenValid = false;
+        User user = SharedPref.GetUserPw(this);
+
+
+        //Checking token: If token not valid - try to refresh token with savedprefs, else send to loginscreen
+        //region CHECKING TOKEN
         if(!isTokenValid)
         {
             AsyncCallInfo info = new AsyncCallInfo();
@@ -48,6 +51,7 @@ public class HomeActivity extends AppCompatActivity{
                         }
                         else{
                             Toast.makeText(HomeActivity.this, "Coulndt create token with savedprefs!", Toast.LENGTH_SHORT).show();
+                            SharedPref.clearPrefs(context);
                             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                         }
 
@@ -59,6 +63,9 @@ public class HomeActivity extends AppCompatActivity{
             };
             asc.execute(info);
         }
+        //endregion
+
+        labelUsername.setText(user.username);
 
 
         Button btnFriends = (Button)findViewById(R.id.btnHomeFriends);

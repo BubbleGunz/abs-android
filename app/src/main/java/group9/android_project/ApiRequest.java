@@ -59,7 +59,7 @@ public class ApiRequest {
             urlConnection.disconnect();
             //endregion
             JSONObject jsonResponse = new JSONObject();
-            if(code >199 || code < 300) {
+            if(code == 200) {
                 try {
                     jsonResponse.put("message","Account created!");
                     jsonResponse.put("code",code);
@@ -119,26 +119,6 @@ public class ApiRequest {
                     sb.append(line);
                 }
                 br.close();
-            }
-            else{
-                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
-                sb = new StringBuilder();
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-                br.close();
-
-            }
-
-
-
-
-
-
-
-            if(code == 200) {
                 try {
                     json = new JSONObject(sb.toString());
                     String accessToken = json.getString("access_token");
@@ -164,6 +144,14 @@ public class ApiRequest {
                 }
             }
             else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
 
                 try {
                     json = new JSONObject(sb.toString());
@@ -188,6 +176,87 @@ public class ApiRequest {
             e.printStackTrace();
         }
         return json;
+    }
+    public static JSONArray GetFriends(User user,Context context){
+        JSONArray jsonArray = new JSONArray();
+        try
+        {
+
+            Log.d("Inne i get friends", "haha");
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+user.username+"/friends");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + user.token);
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if(code == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                    Log.d("Läser line", "körs");
+
+                }
+                br.close();
+                try {
+                    JSONArray json = new JSONArray(sb.toString());
+                    JSONObject code2 = new JSONObject();
+                    code2.put("code",code);
+                    jsonArray.put(code2);
+                    for (int i = 0 ; i<json.length();i++) {
+                        JSONObject friendUserJson =  json.getJSONObject(i);
+                        User friendUser = new User();
+                        friendUser.username = friendUserJson.getString("username");
+                        friendUser.firstname = friendUserJson.getString("firstname");
+                        friendUser.lastname = friendUserJson.getString("lastname");
+                        friendUser.email = friendUserJson.getString("email");
+
+
+                        jsonArray.put(friendUser);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+            }
+
+                try {
+
+
+
+                }finally {
+                    urlConnection.disconnect();
+                    return jsonArray;
+
+                }
+
+            //endregion
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
