@@ -1,6 +1,7 @@
 package group9.android_project;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -43,7 +44,10 @@ public class FriendsActivity extends AppCompatActivity {
 
         btnAddFriend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(FriendsActivity.this, PopupAddFriend.class));
+                Dialog dialog = new Dialog(context);
+                dialog.setTitle("Add friend");
+                dialog.setContentView(R.layout.addfriend_layout);
+                dialog.show();
             }
         });
         //Checking token: If token not valid - try to refresh token with savedprefs, else send to loginscreen

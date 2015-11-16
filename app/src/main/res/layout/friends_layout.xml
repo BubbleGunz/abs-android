@@ -5,7 +5,9 @@
     android:foreground="@drawable/shape_window_dim"
     android:paddingTop="@dimen/activity_vertical_margin"
 
-    tools:context="group9.android_project.FriendsActivity">
+    tools:context="group9.android_project.FriendsActivity"
+    android:clickable="true"
+    android:id="@+id/friendsContainer">
 
     <TextView
         android:layout_width="wrap_content"
