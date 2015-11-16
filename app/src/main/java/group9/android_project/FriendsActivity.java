@@ -11,8 +11,10 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,6 +26,9 @@ import java.util.List;
 
 public class FriendsActivity extends AppCompatActivity {
 
+    Button btnAddFriend;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +39,13 @@ public class FriendsActivity extends AppCompatActivity {
         User user = new User();
         user = SharedPref.GetTokenInfo(context);
         user.username = SharedPref.GetUsername(context);
+        btnAddFriend = (Button)findViewById(R.id.btnFriendsAddFriends);
 
+        btnAddFriend.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(FriendsActivity.this, PopupAddFriend.class));
+            }
+        });
         //Checking token: If token not valid - try to refresh token with savedprefs, else send to loginscreen
         //region CHECKING TOKEN
 
@@ -78,6 +89,11 @@ public class FriendsActivity extends AppCompatActivity {
         info.command = "GetFriends";
         info.user = user;
         info.context = context;
+
+
+
+
+
         AsyncCallArray asc = new AsyncCallArray(){
             @Override
             protected void onPostExecute(JSONArray jsonArray) {
@@ -85,33 +101,14 @@ public class FriendsActivity extends AppCompatActivity {
                 try {
                     int code = (int)jsonArray.getJSONObject(0).get("code");
                     if(code == 200) {
-                        LinearLayout ll = (LinearLayout) findViewById(R.id.friendsLayout);
+                        ArrayList<User> friends = new ArrayList<User>();
                         for (int i = 1; i < jsonArray.length(); i++) {
+
                             User friend = new User();
                             friend = (User)jsonArray.get(i);
-                            Button btn = new Button(context);
-                            btn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.WRAP_CONTENT));
-                            Resources r = getResources();
-                            float pxHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, r.getDisplayMetrics());
-                            int px = Math.round(pxHeight);
-                            btn.setHeight(px);
-                            btn.setId(i);
-                            btn.setText(friend.username);
-
-                            btn.setOnClickListener(new View.OnClickListener() {
-
-                                @Override
-                                public void onClick(View v) {
-                                    Toast.makeText(FriendsActivity.this, "Button " + v.getId() + " clicked", Toast.LENGTH_SHORT).show();
-
-                                }
-                            });
-
-                            ll.addView(btn);
-
-
+                            friends.add(friend);
                         }
+                        populateUsersList(friends);
                     }
                     else{
                         return;
@@ -138,6 +135,15 @@ public class FriendsActivity extends AppCompatActivity {
 
 
 
+    }
+    private void populateUsersList(ArrayList<User> friendsArraylist) {
+        // Construct the data source
+        //ArrayList<User> arrayOfUsers = User.setFriend(friendsArraylist);
+        // Create the adapter to convert the array to views
+        CustomUsersAdapter adapter = new CustomUsersAdapter(this, friendsArraylist);
+        // Attach the adapter to a ListView
+        ListView listView = (ListView) findViewById(R.id.lvUsers);
+        listView.setAdapter(adapter);
     }
 
 }

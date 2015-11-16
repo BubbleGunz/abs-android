@@ -182,7 +182,6 @@ public class ApiRequest {
         try
         {
 
-            Log.d("Inne i get friends", "haha");
             //region CONNECTION
             URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+user.username+"/friends");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
