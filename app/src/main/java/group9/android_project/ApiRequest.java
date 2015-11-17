@@ -177,6 +177,8 @@ public class ApiRequest {
         }
         return json;
     }
+
+    //Returns the users friendlist in a JsonArary
     public static JSONArray GetFriends(User user,Context context){
         JSONArray jsonArray = new JSONArray();
         try
@@ -217,7 +219,6 @@ public class ApiRequest {
                         friendUser.lastname = friendUserJson.getString("lastname");
                         friendUser.email = friendUserJson.getString("email");
 
-
                         jsonArray.put(friendUser);
                     }
 
@@ -256,6 +257,78 @@ public class ApiRequest {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //Add friend , Returns code and message in JsonObject
+    public static JSONObject SetFriend(User searcheduser,Context context){
+        JSONObject json = new JSONObject();
+        try
+        {
+            //region CONNECTION
+            User myUser = SharedPref.GetTokenInfo(context);
+            myUser.username = SharedPref.GetUsername(context);
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+myUser.username+"/friends");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.addRequestProperty("Accept", "application/json");
+            urlConnection.addRequestProperty("Authorization","bearer " +myUser.token);
+
+            OutputStream os = urlConnection.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            osw.write("username="+searcheduser.username);
+            osw.close();
+            os.close();
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if(code == 204) {
+                try {
+                    json.put("message", searcheduser.username+" added to friendlist!");
+                    json.put("code", code);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    urlConnection.disconnect();
+                    return json;
+
+                }
+            }
+            else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+                JSONObject jsonResponse = new JSONObject();
+                try {
+                    json = new JSONObject(sb.toString());
+                    String error = json.getString("message");
+                    jsonResponse.put("message", error);
+                    jsonResponse.put("code", code);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                    urlConnection.disconnect();
+                    return jsonResponse;
+
+                }
+            }
+            //endregion
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return json;
     }
 
 

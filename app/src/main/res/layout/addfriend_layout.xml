@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Search Friend"
+            android:text="Add friend"
             android:id="@+id/textView" />
     </LinearLayout>
 
@@ -29,19 +29,20 @@
         android:id="@+id/linearLayout">
 
         <SearchView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/searchView"
+            android:id="@+id/svFriend"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="34dp" />
+            android:layout_marginTop="34dp"
+            android:queryHint="Search username" />
     </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add friend"
-        android:id="@+id/button"
+        android:id="@+id/btnDiaAddFriend"
         android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

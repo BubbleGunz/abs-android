@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -28,7 +29,6 @@ import java.util.List;
 public class FriendsActivity extends AppCompatActivity {
 
     Button btnAddFriend;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,56 @@ public class FriendsActivity extends AppCompatActivity {
 
         btnAddFriend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
+                final Dialog dialog = new Dialog(context);
                 dialog.setTitle("Add friend");
                 dialog.setContentView(R.layout.addfriend_layout);
                 dialog.show();
+                Button btnDiaAddFriend;
+                btnDiaAddFriend = (Button)dialog.findViewById(R.id.btnDiaAddFriend);
+                btnDiaAddFriend.setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v2){
+                        SearchView svFriend = (SearchView)dialog.findViewById(R.id.svFriend);
+                        CharSequence svFriendCharSeq = svFriend.getQuery();
+                        String svFriendString = svFriendCharSeq.toString();
+
+                        //Add friend: Add a friend to the logged in user
+                        //region ADD FRIEND
+                        AsyncCallInfo info = new AsyncCallInfo();
+                        User searchedUser = new User();
+                        searchedUser.username = svFriendString;
+                        info.command = "GetUser";
+                        info.context = context;
+                        info.user = searchedUser;
+
+                        AsyncCall asc = new AsyncCall(){
+                            @Override
+                            protected void onPostExecute(JSONObject jsonObject) {
+
+                                try {
+                                    int code = (int)jsonObject.get("code");
+                                    String responseMsg = (String)jsonObject.get("message");
+
+                                    if(code == 204) {
+                                        Toast.makeText(FriendsActivity.this, responseMsg, Toast.LENGTH_SHORT).show();
+                                        finish();
+                                        startActivity(getIntent());
+                                    }
+                                    else{
+                                        Toast.makeText(FriendsActivity.this,responseMsg , Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        };
+                        asc.execute(info);
+                        //endregion
+                    }
+
+                });
             }
         });
         //Checking token: If token not valid - try to refresh token with savedprefs, else send to loginscreen
@@ -88,15 +134,12 @@ public class FriendsActivity extends AppCompatActivity {
         }
         //endregion
 
-
+        //Getting friends: Fetching the users friends
+        //region GETTING FRIENDS
         AsyncCallInfo info = new AsyncCallInfo();
         info.command = "GetFriends";
         info.user = user;
         info.context = context;
-
-
-
-
 
         AsyncCallArray asc = new AsyncCallArray(){
             @Override
@@ -135,11 +178,15 @@ public class FriendsActivity extends AppCompatActivity {
             }
         };
         asc.execute(info);
+        //endregion
 
 
 
 
     }
+
+
+    //Fill the listview with friends
     private void populateUsersList(ArrayList<User> friendsArraylist) {
         // Construct the data source
         //ArrayList<User> arrayOfUsers = User.setFriend(friendsArraylist);

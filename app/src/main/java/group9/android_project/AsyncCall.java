@@ -35,9 +35,11 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 JSONObject response = ApiRequest.GetToken(user,params[0].context);
                 return response;
             }
-            case "GetFriends":
+            case "GetUser":
             {
-
+                User user = params[0].user;
+                JSONObject response = ApiRequest.SetFriend(user,params[0].context);
+                return response;
             }
             default:{
                 break;
