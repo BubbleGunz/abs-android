@@ -40,6 +40,12 @@ Errormessage fixat i Asynccall,Fixat med responesen från doinbackgjorund med hjä
 13/11
 Hämta vänner fungerar, satt med JsonArray och lärde oss hur vi använde den
 
+17/11
+Lyckades lägga till vänner, gjorde en dialog som kommer upp där man skriver in namnet på usern.
+
+19/11
+Gå till usern som man klickar på och lista upp userns vacations, samt ändrade jsonArray till Jsonobject för att lättare hantering. Fin slipa koden och kommentera
+
 
 
 

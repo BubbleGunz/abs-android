@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.JsonReader;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONArray;
@@ -26,6 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -35,13 +37,15 @@ public class ApiRequest {
     public Context context;
     public static final String PREFS_NAME="USER_PREFS";
 
-    //Return JsonObj with message and code
+    //POST -------- Return JsonObj with message and code
     public static JSONObject CreateUser(JSONObject user){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        //region CONNECTION
         try
         {
-            //region CONNECTION
             URL url = new URL("http://www.abs-cloud.elasticbeanstalk.com/api/v1/accounts/");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
@@ -54,46 +58,41 @@ public class ApiRequest {
             os.close();
 
             int code = urlConnection.getResponseCode();
-            Log.d("Code", ""+code);
-
             urlConnection.disconnect();
             //endregion
-            JSONObject jsonResponse = new JSONObject();
             if(code == 200) {
-                try {
-                    jsonResponse.put("message","Account created!");
-                    jsonResponse.put("code",code);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return jsonResponse;
+                jsonReturn.put("code", code);
             }
             else{
-                try {
-                    jsonResponse.put("message","Couldnt create account!");
-                    jsonResponse.put("code",code);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return jsonResponse;
+                jsonReturn.put("code", code);
             }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
         }
         catch (IOException e)
         {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
 
-       
+        }
+        //endregion
     }
 
-    //Returns a JsonObj with token,code,message && Saves userinfo in sharedprefs
+    //POST --------Return a JsonObj with token,code,message && Saves userinfo in sharedprefs
     public static JSONObject GetToken(User user,Context context){
-        JSONObject json = new JSONObject();
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        //region CONNECTION
         try
         {
-            //region CONNECTION
             URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/token");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
@@ -119,29 +118,20 @@ public class ApiRequest {
                     sb.append(line);
                 }
                 br.close();
-                try {
-                    json = new JSONObject(sb.toString());
-                    String accessToken = json.getString("access_token");
+                jsonReturn = new JSONObject(sb.toString());
+                String accessToken = jsonReturn.getString("access_token");
 
-                    Calendar tokenDate = Calendar.getInstance();
-                    Date date = new Date();
-                    tokenDate.setTime(date);
-                    tokenDate.add(Calendar.DATE, 1);
-                    date = tokenDate.getTime();
-                    SharedPref.setUser(context, user.username, user.password, date, accessToken);
+                Calendar tokenDate = Calendar.getInstance();
+                Date date = new Date();
+                tokenDate.setTime(date);
+                tokenDate.add(Calendar.DATE, 1);
+                date = tokenDate.getTime();
+                SharedPref.setUser(context, user.username, user.password, date, accessToken);
 
-                    json = new JSONObject();
-                    json.put("message", "Token Created!");
-                    json.put("code", code);
-                    json.put("token", accessToken);
+                jsonReturn = new JSONObject();
+                jsonReturn.put("code", code);
+                jsonReturn.put("token", accessToken);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                    urlConnection.disconnect();
-                    return json;
-
-                }
             }
             else{
                 BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
@@ -153,80 +143,78 @@ public class ApiRequest {
                 }
                 br.close();
 
-                try {
-                    json = new JSONObject(sb.toString());
-                    String error = json.getString("error_description");
-                    json = new JSONObject();
-                    json.put("message", error);
-                    json.put("code", code);
+                JSONObject jsonResponse = new JSONObject(sb.toString());
+                String error = jsonResponse.getString("error_description");
+                jsonReturn = new JSONObject();
+                jsonReturn.put("message", error);
+                jsonReturn.put("code", code);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }finally {
-                    urlConnection.disconnect();
-                    return json;
-
-                }
             }
-            //endregion
 
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-        return json;
+        finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+
     }
 
-    //Returns the users friendlist in a JsonArary
-    public static JSONArray GetFriends(User user,Context context){
-        JSONArray jsonArray = new JSONArray();
+    //GET --------Returns JsonObject the friendlist of the user
+    public static JSONObject GetFriends(User user,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        ArrayList<User> friendList = new ArrayList<User>();
+        HttpURLConnection urlConnection = null;
+
+        //region CONNECTION
         try
         {
 
-            //region CONNECTION
-            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+user.username+"/friends");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            User myUser = SharedPref.GetTokenInfo(context);
+            myUser.username = SharedPref.GetUsername(context);
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+myUser.username+"/friends");
+            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoInput(true);
             urlConnection.setUseCaches(false);
-            urlConnection.addRequestProperty("Authorization", "bearer " + user.token);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myUser.token);
 
             int code = urlConnection.getResponseCode();
             StringBuilder sb = new StringBuilder();
             if(code == 200) {
+
                 BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 sb = new StringBuilder();
-
                 String line;
-
                 while ((line = br.readLine()) != null) {
                     sb.append(line);
-                    Log.d("Läser line", "körs");
-
                 }
                 br.close();
-                try {
-                    JSONArray json = new JSONArray(sb.toString());
-                    JSONObject code2 = new JSONObject();
-                    code2.put("code",code);
-                    jsonArray.put(code2);
-                    for (int i = 0 ; i<json.length();i++) {
-                        JSONObject friendUserJson =  json.getJSONObject(i);
-                        User friendUser = new User();
-                        friendUser.username = friendUserJson.getString("username");
-                        friendUser.firstname = friendUserJson.getString("firstname");
-                        friendUser.lastname = friendUserJson.getString("lastname");
-                        friendUser.email = friendUserJson.getString("email");
 
-                        jsonArray.put(friendUser);
-                    }
+                JSONArray jsonResponse = new JSONArray(sb.toString());
+                for (int i = 0 ; i<jsonResponse.length();i++) {
+                    JSONObject friendJson =  jsonResponse.getJSONObject(i);
+                    User friend = new User();
+                    friend.firstname = friendJson.getString("firstname");
+                    friend.lastname = friendJson.getString("lastname");
+                    friend.username = friendJson.getString("username");
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    friendList.add(friend);
                 }
-
+                jsonReturn.put("friends",friendList);
+                jsonReturn.put("code",code);
             }
+
             else{
                 BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
                 sb = new StringBuilder();
@@ -236,39 +224,38 @@ public class ApiRequest {
                     sb.append(line);
                 }
                 br.close();
-
             }
-
-                try {
-
-
-
-                }finally {
-                    urlConnection.disconnect();
-                    return jsonArray;
-
-                }
-
-            //endregion
-
+            urlConnection.disconnect();
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
         }
         catch (IOException e)
         {
             e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
         }
-        return null;
+        //endregion
     }
 
-    //Add friend , Returns code and message in JsonObject
-    public static JSONObject SetFriend(User searcheduser,Context context){
-        JSONObject json = new JSONObject();
+    //POST -------- Returns JsonObject with code and message
+    public static JSONObject AddFriend(User searchedUser,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+
         try
         {
             //region CONNECTION
             User myUser = SharedPref.GetTokenInfo(context);
             myUser.username = SharedPref.GetUsername(context);
             URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+myUser.username+"/friends");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
@@ -279,23 +266,16 @@ public class ApiRequest {
 
             OutputStream os = urlConnection.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
-            osw.write("username="+searcheduser.username);
+            osw.write("username=" + searchedUser.username);
             osw.close();
             os.close();
 
             int code = urlConnection.getResponseCode();
+
             StringBuilder sb = new StringBuilder();
             if(code == 204) {
-                try {
-                    json.put("message", searcheduser.username+" added to friendlist!");
-                    json.put("code", code);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                    urlConnection.disconnect();
-                    return json;
+                jsonReturn.put("code", code);
 
-                }
             }
             else{
                 BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
@@ -306,29 +286,99 @@ public class ApiRequest {
                     sb.append(line);
                 }
                 br.close();
-                JSONObject jsonResponse = new JSONObject();
-                try {
-                    json = new JSONObject(sb.toString());
-                    String error = json.getString("message");
-                    jsonResponse.put("message", error);
-                    jsonResponse.put("code", code);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }finally {
-                    urlConnection.disconnect();
-                    return jsonResponse;
-
-                }
+                JSONObject jsonResponse = new JSONObject(sb.toString());
+                jsonReturn.put("code", code);
             }
-            //endregion
-
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-        return json;
+        finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //GET --------Returns JsonObject with the choosen user's vacationList
+    public static JSONObject GetVacations(User user,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        ArrayList<Vacation> vacationList = new ArrayList<Vacation>();
+        HttpURLConnection urlConnection = null;
+        try
+        {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+user.username+"/vacations");
+            User myUser = SharedPref.GetTokenInfo(context);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myUser.token);
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if(code == 200) {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+                JSONArray jsonResponse = new JSONArray(sb.toString());
+                for (int i = 0 ; i<jsonResponse.length();i++) {
+                    JSONObject vacationJson =  jsonResponse.getJSONObject(i);
+                    Vacation vacation = new Vacation();
+                    vacation.title = vacationJson.getString("title");
+                    vacation.description = vacationJson.getString("description");
+                    vacation.place = vacationJson.getString("place");
+                    vacation.end = vacationJson.getInt("end");
+                    vacation.start = vacationJson.getInt("start");
+
+                    vacationList.add(vacation);
+                }
+                jsonReturn.put("vacations",vacationList);
+                jsonReturn.put("code",code);
+            }
+
+            else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+            }
+            urlConnection.disconnect();
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
     }
 
 

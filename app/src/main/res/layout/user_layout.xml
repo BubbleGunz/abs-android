@@ -2,71 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Welcome"
-        android:id="@+id/labelHomeWelcome"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Username"
-        android:id="@+id/labelHomeUsername"
-        android:layout_below="@+id/labelHomeWelcome"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true" />'
+    '
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="420dp"
-        android:id="@+id/scrollView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:id="@+id/titleHolder">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Firstname Lastname"
+            android:id="@+id/tvName" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:layout_below="@+id/btnUserVacation1"
-                android:text="Island"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Username"
+            android:id="@+id/tvUsername" />
+    </LinearLayout>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:layout_below="@+id/labelHomeUsername"
-                android:text="Cypern"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:layout_below="@+id/labelHomeUsername"
-                android:text="Magaluf"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/lvVacations"
+        android:layout_below="@+id/titleHolder"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

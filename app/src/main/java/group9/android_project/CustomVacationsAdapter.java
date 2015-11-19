@@ -12,28 +12,25 @@ import java.util.ArrayList;
 /**
  * Created by Fetes on 2015-11-16.
  */
-public class CustomUsersAdapter extends ArrayAdapter<User> {
-    public CustomUsersAdapter(Context context, ArrayList<User> users) {
-        super(context,0, users);
+public class CustomVacationsAdapter extends ArrayAdapter<Vacation> {
+    public CustomVacationsAdapter(Context context, ArrayList<Vacation> vacations) {
+        super(context,0, vacations);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        User user = getItem(position);
+        Vacation vacation = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_user, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_vacation, parent, false);
         }
 
         // Lookup view for data population
-        TextView tvFirstname = (TextView) convertView.findViewById(R.id.tvFirstname);
-        TextView tvLastname = (TextView) convertView.findViewById(R.id.tvLastname);
-        TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
+        TextView tvVacationName = (TextView) convertView.findViewById(R.id.tvVacationname);
         // Populate the data into the template view using the data object
-        tvFirstname.setText(user.firstname);
-        tvLastname.setText(user.lastname);
-        tvUsername.setText(user.username);
+        tvVacationName.setText(vacation.title);
+
 
 
         // Return the completed view to render on screen

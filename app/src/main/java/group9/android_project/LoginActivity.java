@@ -73,8 +73,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         try {
                             int code = (int)jsonObject.get("code");
-                            String ResponseMsg = (String)jsonObject.get("message");
-
                             if(code == 200) {
                                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                             }

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -59,9 +60,9 @@ public class FriendsActivity extends AppCompatActivity {
                         //Add friend: Add a friend to the logged in user
                         //region ADD FRIEND
                         AsyncCallInfo info = new AsyncCallInfo();
-                        User searchedUser = new User();
+                        final User searchedUser = new User();
                         searchedUser.username = svFriendString;
-                        info.command = "GetUser";
+                        info.command = "AddFriend";
                         info.context = context;
                         info.user = searchedUser;
 
@@ -71,15 +72,15 @@ public class FriendsActivity extends AppCompatActivity {
 
                                 try {
                                     int code = (int)jsonObject.get("code");
-                                    String responseMsg = (String)jsonObject.get("message");
+                                    //String responseMsg = (String)jsonObject.get("message");
 
                                     if(code == 204) {
-                                        Toast.makeText(FriendsActivity.this, responseMsg, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FriendsActivity.this, searchedUser+" added as friend!", Toast.LENGTH_SHORT).show();
                                         finish();
                                         startActivity(getIntent());
                                     }
                                     else{
-                                        Toast.makeText(FriendsActivity.this,responseMsg , Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FriendsActivity.this,code + " - User not found!" , Toast.LENGTH_SHORT).show();
 
                                     }
 
@@ -141,21 +142,15 @@ public class FriendsActivity extends AppCompatActivity {
         info.user = user;
         info.context = context;
 
-        AsyncCallArray asc = new AsyncCallArray(){
+        AsyncCall asc = new AsyncCall(){
             @Override
-            protected void onPostExecute(JSONArray jsonArray) {
+            protected void onPostExecute(JSONObject jsonObject) {
 
                 try {
-                    int code = (int)jsonArray.getJSONObject(0).get("code");
+                    int code = (int)jsonObject.get("code");
                     if(code == 200) {
-                        ArrayList<User> friends = new ArrayList<User>();
-                        for (int i = 1; i < jsonArray.length(); i++) {
-
-                            User friend = new User();
-                            friend = (User)jsonArray.get(i);
-                            friends.add(friend);
-                        }
-                        populateUsersList(friends);
+                        ArrayList<User> friendList = (ArrayList<User>)jsonObject.get("friends");
+                        populateUsersList(friendList);
                     }
                     else{
                         return;
@@ -194,6 +189,18 @@ public class FriendsActivity extends AppCompatActivity {
         CustomUsersAdapter adapter = new CustomUsersAdapter(this, friendsArraylist);
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.lvUsers);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3) {
+                User user = (User) adapter.getItemAtPosition(position);
+                Intent i = new Intent(FriendsActivity.this,UserProfileActivity.class);
+                i.putExtra("userObject",user);
+                startActivity(i);
+            }
+        });
+
         listView.setAdapter(adapter);
     }
 

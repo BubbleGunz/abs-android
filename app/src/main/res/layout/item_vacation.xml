@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="#44bd79"
+        android:gravity="center_vertical|center_horizontal">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Magaluf"
+            android:id="@+id/tvVacationname"
+            android:layout_gravity="center_horizontal"
+            android:background="#7df1f1f1"
+            android:padding="15dp"
+            android:textSize="25dp"
+            android:gravity="center|center_vertical" />
+    </LinearLayout>
+</RelativeLayout>
