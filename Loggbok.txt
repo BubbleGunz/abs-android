@@ -1,3 +1,15 @@
+KVAR ATT FIXA:
+
+Navigations menyn
+Visa median
+Lägga till vacations, memories å media
+Deleta grejer
+Put/patch på vissa saker
+Offline - cachea
+Flowet
+
+
+
 20/10 - 2015
 Fixade Github så alla har tillgång till projektet.
 Wireframes - Interface guide
@@ -46,6 +58,8 @@ Lyckades lägga till vänner, gjorde en dialog som kommer upp där man skriver in n
 19/11
 Gå till usern som man klickar på och lista upp userns vacations, samt ändrade jsonArray till Jsonobject för att lättare hantering. Fin slipa koden och kommentera
 
+20/11
+Gjort så man kan navigera sig till media, håller på att försöka lista ut hur vi ska visa median
 
 
 

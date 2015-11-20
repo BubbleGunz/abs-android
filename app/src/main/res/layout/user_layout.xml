@@ -8,9 +8,10 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/titleHolder">
+        android:id="@+id/titleHolder"
+        android:padding="25dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -25,13 +26,48 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Username"
             android:id="@+id/tvUsername" />
+
     </LinearLayout>
 
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/lvVacations"
+        android:id="@+id/lvItems"
+        android:layout_below="@+id/navHolder"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/titleHolder"
-        android:layout_centerHorizontal="true" />
+        android:gravity="center_vertical"
+        android:id="@+id/navHolder">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/tvVacation" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="/"
+            android:id="@+id/tvSlash"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/tvMemory" />
+
+    </LinearLayout>
 
 </RelativeLayout>

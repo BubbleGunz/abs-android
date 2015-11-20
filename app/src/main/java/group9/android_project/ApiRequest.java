@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -225,7 +226,6 @@ public class ApiRequest {
                 }
                 br.close();
             }
-            urlConnection.disconnect();
         }
         catch (JSONException e)
         {
@@ -308,7 +308,7 @@ public class ApiRequest {
         //endregion
     }
 
-    //GET --------Returns JsonObject with the choosen user's vacationList
+    //GET --------Returns JsonObject with the choosen user's vacations
     public static JSONObject GetVacations(User user,Context context){
         JSONObject jsonReturn = new JSONObject();
         ArrayList<Vacation> vacationList = new ArrayList<Vacation>();
@@ -340,6 +340,7 @@ public class ApiRequest {
                 for (int i = 0 ; i<jsonResponse.length();i++) {
                     JSONObject vacationJson =  jsonResponse.getJSONObject(i);
                     Vacation vacation = new Vacation();
+                    vacation.id = vacationJson.getInt("id");
                     vacation.title = vacationJson.getString("title");
                     vacation.description = vacationJson.getString("description");
                     vacation.place = vacationJson.getString("place");
@@ -362,7 +363,6 @@ public class ApiRequest {
                 }
                 br.close();
             }
-            urlConnection.disconnect();
         }
         catch (JSONException e)
         {
@@ -380,6 +380,161 @@ public class ApiRequest {
         }
         //endregion
     }
+
+    //GET --------Returns JsonObject with the choosen user's memories
+    public static JSONObject GetMemories(Vacation vacation,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        ArrayList<Memory> memoryArrayList = new ArrayList<Memory>();
+        HttpURLConnection urlConnection = null;
+        try
+        {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/vacations/"+vacation.id+"/memories");
+            User myUser = SharedPref.GetTokenInfo(context);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myUser.token);
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if(code == 200) {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+                JSONArray jsonResponse = new JSONArray(sb.toString());
+                for (int i = 0 ; i<jsonResponse.length();i++) {
+                    JSONObject memoryJson =  jsonResponse.getJSONObject(i);
+                    Memory memory = new Memory();
+                    memory.id = memoryJson.getInt("id");
+                    memory.title = memoryJson.getString("title");
+                    memory.description = memoryJson.getString("description");
+                    memory.place = memoryJson.getString("place");
+                    memory.time = memoryJson.getInt("time");
+                    JSONObject position = memoryJson.getJSONObject("position");
+                    Position p = new Position();
+                    p.latitude = (float)position.getDouble("latitude");
+                    p.longitude = (float)position.getDouble("longitude");
+                    memory.position = p;
+
+                    memoryArrayList.add(memory);
+                }
+                jsonReturn.put("memories",memoryArrayList);
+                jsonReturn.put("code",code);
+            }
+
+            else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //GET --------Returns JsonObject with the choosen user's memories
+    public static JSONObject GetMedia(Memory memory,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        ArrayList<Media> mediaArrayList = new ArrayList<Media>();
+        HttpURLConnection urlConnection = null;
+
+        try
+        {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/memories/"+memory.id+"/media-objects");
+            User myUser = SharedPref.GetTokenInfo(context);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myUser.token);
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if(code == 200) {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+                JSONArray jsonResponse = new JSONArray(sb.toString());
+                for (int i = 0 ; i<jsonResponse.length();i++) {
+                    JSONObject mediaJson =  jsonResponse.getJSONObject(i);
+                    Media media = new Media();
+                    PictureMedia pMedia = new PictureMedia();
+                    media.id = mediaJson.getInt("id");
+                    media.fileURL = mediaJson.getString("fileurl");
+                    media.container = mediaJson.getString("container");
+                    if(media.container.contains("image"))
+                    {
+                        pMedia.width = mediaJson.getInt("width");
+                        pMedia.height = mediaJson.getInt("height");
+
+                    }
+                    mediaArrayList.add(media);
+                }
+                jsonReturn.put("media",mediaArrayList);
+                jsonReturn.put("code",code);
+            }
+
+            else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
 
 
 

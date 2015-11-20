@@ -20,35 +20,45 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
     protected JSONObject doInBackground(AsyncCallInfo... params) {
         String sw = params[0].command;
         Log.d("In background ",sw);
-
+        JSONObject response = null;
 
         switch(sw){
             case "CreateUser" :
             {
                 JSONObject json = params[0].userInfo;
-                JSONObject response = ApiRequest.CreateUser(json);
+                response = ApiRequest.CreateUser(json);
                 return response;
             }
             case "GetToken":
             {
                 User user = params[0].user;
-                JSONObject response = ApiRequest.GetToken(user,params[0].context);
+                response = ApiRequest.GetToken(user,params[0].context);
                 return response;
             }
             case "AddFriend":
             {
                 User user = params[0].user;
-                JSONObject response = ApiRequest.AddFriend(user,params[0].context);
+                response = ApiRequest.AddFriend(user,params[0].context);
                 return response;
             }
             case "GetFriends": {
                 User user = params[0].user;
-                JSONObject response = ApiRequest.GetFriends(user, params[0].context);
+                response = ApiRequest.GetFriends(user, params[0].context);
                 return response;
             }
             case "GetVacations": {
                 User user = params[0].user;
-                JSONObject response = ApiRequest.GetVacations(user, params[0].context);
+                response = ApiRequest.GetVacations(user, params[0].context);
+                return response;
+            }
+            case "GetMemories": {
+                Vacation vacation = params[0].vacation;
+                response = ApiRequest.GetMemories(vacation, params[0].context);
+                return response;
+            }
+            case "GetMedia": {
+                Memory memory = params[0].memory;
+                response = ApiRequest.GetMedia(memory, params[0].context);
                 return response;
             }
             default:{
@@ -57,7 +67,7 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
 
         }
 
-        return null;
+        return response;
     }
 
 

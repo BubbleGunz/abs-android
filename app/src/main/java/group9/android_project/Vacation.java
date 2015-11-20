@@ -9,5 +9,6 @@ public class Vacation implements Serializable{
 
     public int id,start,end;
     public String title,description,place;
+    public User user;
 
 }

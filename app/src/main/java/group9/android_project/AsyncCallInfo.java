@@ -11,5 +11,7 @@ public class AsyncCallInfo {
     public String command;
     public JSONObject userInfo;
     public User user;
+    public Vacation vacation;
+    public Memory memory;
     public Context context;
 }

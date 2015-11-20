@@ -51,9 +51,9 @@ public class FriendsActivity extends AppCompatActivity {
                 dialog.show();
                 Button btnDiaAddFriend;
                 btnDiaAddFriend = (Button)dialog.findViewById(R.id.btnDiaAddFriend);
-                btnDiaAddFriend.setOnClickListener(new View.OnClickListener(){
-                    public void onClick(View v2){
-                        SearchView svFriend = (SearchView)dialog.findViewById(R.id.svFriend);
+                btnDiaAddFriend.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v2) {
+                        SearchView svFriend = (SearchView) dialog.findViewById(R.id.svFriend);
                         CharSequence svFriendCharSeq = svFriend.getQuery();
                         String svFriendString = svFriendCharSeq.toString();
 
@@ -66,21 +66,20 @@ public class FriendsActivity extends AppCompatActivity {
                         info.context = context;
                         info.user = searchedUser;
 
-                        AsyncCall asc = new AsyncCall(){
+                        AsyncCall asc = new AsyncCall() {
                             @Override
                             protected void onPostExecute(JSONObject jsonObject) {
 
                                 try {
-                                    int code = (int)jsonObject.get("code");
+                                    int code = (int) jsonObject.get("code");
                                     //String responseMsg = (String)jsonObject.get("message");
 
-                                    if(code == 204) {
-                                        Toast.makeText(FriendsActivity.this, searchedUser+" added as friend!", Toast.LENGTH_SHORT).show();
+                                    if (code == 204) {
+                                        Toast.makeText(FriendsActivity.this, searchedUser + " added as friend!", Toast.LENGTH_SHORT).show();
                                         finish();
                                         startActivity(getIntent());
-                                    }
-                                    else{
-                                        Toast.makeText(FriendsActivity.this,code + " - User not found!" , Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(FriendsActivity.this, code + " - User not found!", Toast.LENGTH_SHORT).show();
 
                                     }
 
