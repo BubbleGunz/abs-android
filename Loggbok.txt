@@ -1,12 +1,12 @@
 KVAR ATT FIXA:
 
 Navigations menyn
-Visa median
 Lägga till vacations, memories å media
 Deleta grejer
 Put/patch på vissa saker
 Offline - cachea
 Flowet
+Fixa att man stänger bilden på click
 
 
 

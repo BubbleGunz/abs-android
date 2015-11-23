@@ -2,6 +2,8 @@ package group9.android_project;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.session.MediaSession;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -30,6 +32,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Benjamin on 2015-11-05.
@@ -458,7 +462,7 @@ public class ApiRequest {
         //endregion
     }
 
-    //GET --------Returns JsonObject with the choosen user's memories
+    //GET --------Returns JsonObject with the choosen user's media
     public static JSONObject GetMedia(Memory memory,Context context){
         JSONObject jsonReturn = new JSONObject();
         ArrayList<Media> mediaArrayList = new ArrayList<Media>();
@@ -486,12 +490,13 @@ public class ApiRequest {
                     sb.append(line);
                 }
                 br.close();
+                urlConnection.disconnect();
 
                 JSONArray jsonResponse = new JSONArray(sb.toString());
                 for (int i = 0 ; i<jsonResponse.length();i++) {
                     JSONObject mediaJson =  jsonResponse.getJSONObject(i);
-                    Media media = new Media();
-                    PictureMedia pMedia = new PictureMedia();
+                    final Media media = new Media();
+                    final PictureMedia pMedia = new PictureMedia();
                     media.id = mediaJson.getInt("id");
                     media.fileURL = mediaJson.getString("fileurl");
                     media.container = mediaJson.getString("container");
@@ -500,7 +505,22 @@ public class ApiRequest {
                         pMedia.width = mediaJson.getInt("width");
                         pMedia.height = mediaJson.getInt("height");
 
+                        //Getting bitmap: fethcing the bitmaps from the media
+                        //region GETTING BITMAPS
+                        if(media.fileURL != null) {
+                            try {
+                                Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(media.fileURL).getContent());
+                                media.bitmap = bitmap;
+                            }
+                            catch (IOException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                        //endregion
+
                     }
+
                     mediaArrayList.add(media);
                 }
                 jsonReturn.put("media",mediaArrayList);
@@ -534,6 +554,109 @@ public class ApiRequest {
         }
         //endregion
     }
+
+    //GET --------Fetching the images
+    public static JSONObject GetBitmap(String fileUrl,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+            try {
+                    //region CONNECTION
+                    URL url = new URL(fileUrl);
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.setDoInput(true);
+                    urlConnection.setUseCaches(false);
+
+                    int code = urlConnection.getResponseCode();
+                    if (code == 200) {
+                        InputStream input = urlConnection.getInputStream();
+                        Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
+                        jsonReturn.put("bitmap", myBitmap);
+                    } else {
+                        BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+
+                        while ((line = br.readLine()) != null) {
+                            sb.append(line);
+                        }
+                        br.close();
+                    }
+                    jsonReturn.put("code", code);
+
+            }
+
+
+
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //GET --------Remove friend to the user
+    public static JSONObject RemoveFriend(User user,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        String myUser = SharedPref.GetUsername(context);
+        try {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/" + myUser + "/friends/" + user.username);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            User myToken = SharedPref.GetTokenInfo(context);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("DELETE");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myToken.token);
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if (code == 204) {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+            }
+            jsonReturn.put("code", code);
+        }
+
+
+
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
 
 
 

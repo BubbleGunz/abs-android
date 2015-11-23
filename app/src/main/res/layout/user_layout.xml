@@ -9,7 +9,6 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
         android:id="@+id/titleHolder"
         android:padding="25dp">
 
@@ -27,15 +26,17 @@
             android:text="Username"
             android:id="@+id/tvUsername" />
 
-    </LinearLayout>
+        <Button
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:text="-"
+            android:background = "@drawable/redbutton"
+            android:id="@+id/btnRemoveFriend"
+            android:textSize="30sp"
+            android:textColor="@drawable/btntxtcolor"
+            android:layout_gravity="right" />
 
-    <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/lvItems"
-        android:layout_below="@+id/navHolder"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -50,7 +51,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:id="@+id/tvVacation" />
+            android:id="@+id/tvVacation"
+            android:padding="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,15 +61,29 @@
             android:text="/"
             android:id="@+id/tvSlash"
             android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:padding="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:id="@+id/tvMemory" />
+            android:id="@+id/tvMemory"
+            android:padding="10dp" />
 
     </LinearLayout>
+
+    <GridView
+        android:id="@+id/gvItems"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:gravity="center|center_vertical|center_horizontal"
+        android:layout_below="@+id/navHolder"
+
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp" />
 
 </RelativeLayout>

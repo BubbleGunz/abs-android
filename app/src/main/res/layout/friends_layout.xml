@@ -33,6 +33,7 @@
         android:textColor="@drawable/btntxtcolor"/>
 
     <ListView
+        android:longClickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/lvUsers"

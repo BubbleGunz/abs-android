@@ -12,12 +12,14 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -46,7 +48,7 @@ public class FriendsActivity extends AppCompatActivity {
         btnAddFriend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(context);
-                dialog.setTitle("Add friend");
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.addfriend_layout);
                 dialog.show();
                 Button btnDiaAddFriend;
@@ -75,7 +77,7 @@ public class FriendsActivity extends AppCompatActivity {
                                     //String responseMsg = (String)jsonObject.get("message");
 
                                     if (code == 204) {
-                                        Toast.makeText(FriendsActivity.this, searchedUser + " added as friend!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FriendsActivity.this, searchedUser.username + " added as friend!", Toast.LENGTH_SHORT).show();
                                         finish();
                                         startActivity(getIntent());
                                     } else {
@@ -154,16 +156,6 @@ public class FriendsActivity extends AppCompatActivity {
                     else{
                         return;
                     }
-                    /*String ResponseMsg = (String)jsonObject.get("message");
-                    if(code == 200) {
-                        Toast.makeText(FriendsActivity.this, "Token Refreshed!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    else{
-                        Toast.makeText(FriendsActivity.this, "Coulndt create token with savedprefs!", Toast.LENGTH_SHORT).show();
-                        SharedPref.clearPrefs(context);
-                        startActivity(new Intent(FriendsActivity.this, LoginActivity.class));
-                    */
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -173,7 +165,6 @@ public class FriendsActivity extends AppCompatActivity {
         };
         asc.execute(info);
         //endregion
-
 
 
 
@@ -187,17 +178,18 @@ public class FriendsActivity extends AppCompatActivity {
         // Create the adapter to convert the array to views
         CustomUsersAdapter adapter = new CustomUsersAdapter(this, friendsArraylist);
         // Attach the adapter to a ListView
-        ListView listView = (ListView) findViewById(R.id.lvUsers);
+        final ListView listView = (ListView) findViewById(R.id.lvUsers);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                     long arg3) {
                 User user = (User) adapter.getItemAtPosition(position);
-                Intent i = new Intent(FriendsActivity.this,UserProfileActivity.class);
-                i.putExtra("userObject",user);
+                Intent i = new Intent(FriendsActivity.this, UserProfileActivity.class);
+                i.putExtra("userObject", user);
                 startActivity(i);
             }
+
         });
 
         listView.setAdapter(adapter);

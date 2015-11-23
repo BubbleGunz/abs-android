@@ -4,14 +4,17 @@ import android.content.Context;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by Fetes on 2015-11-09.
  */
 public class AsyncCallInfo {
-    public String command;
+    public String command,url;
     public JSONObject userInfo;
     public User user;
     public Vacation vacation;
     public Memory memory;
     public Context context;
+
 }

@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by Benjamin on 2015-11-06.
  */
@@ -59,6 +61,16 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
             case "GetMedia": {
                 Memory memory = params[0].memory;
                 response = ApiRequest.GetMedia(memory, params[0].context);
+                return response;
+            }
+            case "GetBitmap": {
+                String url= params[0].url;
+                response = ApiRequest.GetBitmap(url, params[0].context);
+                return response;
+            }
+            case "RemoveFriend": {
+                User user= params[0].user;
+                response = ApiRequest.RemoveFriend(user, params[0].context);
                 return response;
             }
             default:{
