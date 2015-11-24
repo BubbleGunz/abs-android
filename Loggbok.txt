@@ -61,5 +61,9 @@ Gå till usern som man klickar på och lista upp userns vacations, samt ändrade js
 20/11
 Gjort så man kan navigera sig till media, håller på att försöka lista ut hur vi ska visa median
 
+23/11
+Kunna hämta och se på bilder i media, removea friend. Lite frågor om API:t dök upp: hämta friendlist vems det e,
+Hur ska vi redigera våra egna vacations samt memories etc.
+E video/ljud ett krav
 
 
