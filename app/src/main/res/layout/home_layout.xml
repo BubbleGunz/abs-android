@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_below="@+id/labelHomeUsername"
-        android:text="Vacations"
+        android:text="My Profile"
         android:id="@+id/btnHomeProfile"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -45,6 +45,12 @@
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_below="@+id/btnHomeFriends"
+        android:text="Flow"
+        android:id="@+id/btnFlow" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_below="@+id/btnFlow"
         android:text="Log Out"
         android:id="@+id/btnHomeLogout" />
 

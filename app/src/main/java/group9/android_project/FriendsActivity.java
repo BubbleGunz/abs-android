@@ -1,6 +1,8 @@
 package group9.android_project;
 
 
+import android.app.Activity;
+import android.app.ActivityGroup;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsActivity extends AppCompatActivity {
+public class FriendsActivity extends Activity {
 
     Button btnAddFriend;
 

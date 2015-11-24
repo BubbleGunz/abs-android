@@ -22,7 +22,7 @@ public class HomeActivity extends AppCompatActivity{
         setContentView(R.layout.home_layout);
         final Context context = this;
 
-        TextView labelUsername = (TextView)findViewById(R.id.labelHomeUsername);
+        final TextView labelUsername = (TextView)findViewById(R.id.labelHomeUsername);
 
 
 
@@ -72,6 +72,23 @@ public class HomeActivity extends AppCompatActivity{
         btnFriends.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(HomeActivity.this, FriendsActivity.class));
+            }
+        });
+        Button btnFlow = (Button)findViewById(R.id.btnFlow);
+        btnFlow.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, FlowActivity.class));
+            }
+        });
+
+        Button btnMyProfile = (Button)findViewById(R.id.btnHomeProfile);
+        btnMyProfile.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                User myUser = new User();
+                myUser.username = SharedPref.GetUsername(context);
+                Intent i = new Intent(HomeActivity.this, UserProfileActivity.class);
+                i.putExtra("userObject",myUser);
+                startActivity(i);
             }
         });
 

@@ -217,7 +217,6 @@ public class ApiRequest {
                     friendList.add(friend);
                 }
                 jsonReturn.put("friends",friendList);
-                jsonReturn.put("code",code);
             }
 
             else{
@@ -230,6 +229,7 @@ public class ApiRequest {
                 }
                 br.close();
             }
+            jsonReturn.put("code",code);
         }
         catch (JSONException e)
         {
@@ -657,6 +657,52 @@ public class ApiRequest {
         //endregion
     }
 
+    public static JSONObject AddVacation(Vacation vacation, Context context){
+        JSONObject jsonReturn = new JSONObject();
+        User myUser = SharedPref.GetTokenInfo(context);
+        HttpURLConnection urlConnection = null;
+        //region CONNECTION
+        try
+        {
+            URL url = new URL("http://www.abs-cloud.elasticbeanstalk.com/api/v1/vacations/");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.addRequestProperty("Content-Type", "application/json");
+            urlConnection.addRequestProperty("Authorization","bearer " +myUser.token);
+            OutputStream os = urlConnection.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            osw.write("title=" + vacation.title+"&description="+vacation.description+"&place="+vacation.place+"&start="+vacation.start+"&end="+vacation.end);
+            osw.close();
+            os.close();
+
+            int code = urlConnection.getResponseCode();
+            urlConnection.disconnect();
+            //endregion
+            if(code == 200) {
+                jsonReturn.put("code", code);
+            }
+            else{
+                jsonReturn.put("code", code);
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
 
 
 

@@ -25,6 +25,12 @@
         <activity
             android:name=".CreateAccActivity">
         </activity>
+        <activity
+            android:name=".FlowActivity">
+        </activity>
+        <activity
+            android:name=".MyUserProfileActivity">
+        </activity>
         <activity android:name=".FriendsActivity" >
         </activity>
         <activity android:name=".UserProfileActivity" >
