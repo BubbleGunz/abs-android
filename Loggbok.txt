@@ -66,4 +66,7 @@ Kunna hämta och se på bilder i media, removea friend. Lite frågor om API:t dök u
 Hur ska vi redigera våra egna vacations samt memories etc.
 E video/ljud ett krav
 
+24/11
+Gjorde så att en user ska kunna lägga till vacations, strulade lite med Datetime picker. Fick nästan att funka förutom att convertera Stringdatumet till en Int.
+
 
