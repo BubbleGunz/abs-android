@@ -657,6 +657,7 @@ public class ApiRequest {
         //endregion
     }
 
+    //POST --------Add a vacation to the user
     public static JSONObject AddVacation(Vacation vacation, Context context){
         JSONObject jsonReturn = new JSONObject();
         User myUser = SharedPref.GetTokenInfo(context);
@@ -669,23 +670,19 @@ public class ApiRequest {
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
-            urlConnection.addRequestProperty("Content-Type", "application/json");
+            urlConnection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlConnection.addRequestProperty("Authorization","bearer " +myUser.token);
             OutputStream os = urlConnection.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
-            osw.write("title=" + vacation.title+"&description="+vacation.description+"&place="+vacation.place+"&start="+vacation.start+"&end="+vacation.end);
+            osw.write("title=" + vacation.title + "&description=" + vacation.description + "&place=" + vacation.place + "&start=" + vacation.start + "&end=" + vacation.end);
             osw.close();
             os.close();
 
             int code = urlConnection.getResponseCode();
             urlConnection.disconnect();
             //endregion
-            if(code == 200) {
-                jsonReturn.put("code", code);
-            }
-            else{
-                jsonReturn.put("code", code);
-            }
+            jsonReturn.put("code", code);
+
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -704,6 +701,49 @@ public class ApiRequest {
         //endregion
     }
 
+    //POST --------Add a vacation to the user
+    public static JSONObject AddMemory(Memory memory,Vacation vacation, Context context){
+        JSONObject jsonReturn = new JSONObject();
+        User myUser = SharedPref.GetTokenInfo(context);
+        HttpURLConnection urlConnection = null;
+        //region CONNECTION
+        try
+        {
+            URL url = new URL("http://www.abs-cloud.elasticbeanstalk.com/api/v1/vacations/"+vacation.id+"/memories");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.addRequestProperty("Authorization","bearer " +myUser.token);
+            OutputStream os = urlConnection.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            osw.write("title=" + memory.title+"&description="+memory.description+"&place="+memory.place+"&time="+memory.time+"&position="+memory.position);
+            osw.close();
+            os.close();
+
+            int code = urlConnection.getResponseCode();
+            urlConnection.disconnect();
+            //endregion
+            jsonReturn.put("code", code);
+
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
 
 
 

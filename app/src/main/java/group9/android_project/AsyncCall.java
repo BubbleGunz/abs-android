@@ -78,6 +78,13 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 response = ApiRequest.AddVacation(vacation, params[0].context);
                 return response;
             }
+            case "AddMemory": {
+                Memory memory= params[0].memory;
+                Vacation vacation= params[0].vacation;
+
+                response = ApiRequest.AddMemory(memory,vacation, params[0].context);
+                return response;
+            }
             default:{
                 break;
             }

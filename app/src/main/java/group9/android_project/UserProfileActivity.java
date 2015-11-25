@@ -5,10 +5,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -29,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -41,15 +48,23 @@ public class UserProfileActivity extends AppCompatActivity{
     TextView tvName;
     TextView tvVacation;
     TextView tvMemory;
-    TextView tvSlash,tvStartDate,tvEndDate;
+    TextView tvSlash,tvStartDate,tvEndDate,tvLongtide,tvLatitude;
     EditText etTitle, etDescription, etPlace;
-    Button btnDelete,btnAdd,btnCalender,btnCalender2, btnConfirmVacation;
+    private static final int SELECTED_PICTURE=1;
+    private static final int PICK_IMAGE=1;
+
+    ImageView imgViewAdd;
+
+    Button btnDelete,btnAdd,btnCalender,btnCalender2, btnConfirmVacation,btnGetFile;
+
+
     Context context = this;
     boolean isUserMe = false;
 
     int year_x,month_x,day_x;
     static final int DILOG_ID = 0;
     static final int DILOG_ID2 = 1;
+    static final int DILOG_ID3 = 2;
 
     //Dialog calender-popup - Shows a calender-popup and put the date in a textview.
     //region DIALOG CALENDER-POPUP
@@ -71,8 +86,22 @@ public class UserProfileActivity extends AppCompatActivity{
                     }
                 }
         );
+
+
     }
-    @Override
+    public void showDialogMemoryOnButtonClick() {
+        btnCalender.setOnClickListener(
+                new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        showDialog(DILOG_ID);
+                    }
+                }
+        );
+    }
+
+
+        @Override
     protected Dialog onCreateDialog(int id){
         if(id == DILOG_ID)
         {
@@ -92,7 +121,8 @@ public class UserProfileActivity extends AppCompatActivity{
                 month_x = monthOfYear + 1;
                 day_x = dayOfMonth;
                 Toast.makeText(UserProfileActivity.this, year_x +" / " + month_x+ " / "+day_x,Toast.LENGTH_SHORT).show();
-                tvStartDate.setText(year_x + " " + month_x + " " + day_x);
+                String date = year_x +" "+ month_x +" "+ day_x;
+                tvStartDate.setText(date);
             }
     };
     private DatePickerDialog.OnDateSetListener dpickerListner2
@@ -106,6 +136,7 @@ public class UserProfileActivity extends AppCompatActivity{
             tvEndDate.setText(year_x + " " + month_x + " " + day_x);
         }
     };
+
     //endregion
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -311,10 +342,11 @@ public class UserProfileActivity extends AppCompatActivity{
                                         vac.title = (String)etTitle.getText().toString();
                                         vac.description = etDescription.getText().toString();
                                         vac.place = etPlace.getText().toString();
-                                        String start = tvStartDate.toString().trim();
-                                        vac.start = Integer.parseInt(start);
-                                        String end = tvEndDate.toString().trim();
-                                        vac.end = Integer.parseInt(end);
+
+                                        String start = tvStartDate.getText().toString().trim();
+                                        vac.start = Integer.parseInt(start.replaceAll("\\s+",""));
+                                        String end = tvEndDate.getText().toString().trim();
+                                        vac.end = Integer.parseInt(end.replaceAll("\\s+",""));
                                         info.vacation = vac;
                                         info.command = "AddVacation";
                                         info.context = context;
@@ -326,7 +358,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                                     int code = (int) jsonObject.get("code");
                                                     //String responseMsg = (String)jsonObject.get("message");
 
-                                                    if (code == 200) {
+                                                    if (code == 204) {
                                                         Toast.makeText(UserProfileActivity.this, info.vacation.title + " added!", Toast.LENGTH_SHORT).show();
                                                         finish();
                                                         startActivity(getIntent());
@@ -345,14 +377,6 @@ public class UserProfileActivity extends AppCompatActivity{
                                         //endregion
                                     }
                                 });
-                                /*Button btnDiaAddFriend;
-                                btnDiaAddFriend = (Button) dialog.findViewById(R.id.btnDiaAddFriend);
-                                btnDiaAddFriend.setOnClickListener(new View.OnClickListener() {
-                                    public void onClick(View v2) {
-
-                                    }
-
-                                });*/
                             }
                         });
 
@@ -448,6 +472,76 @@ public class UserProfileActivity extends AppCompatActivity{
                         });
 
                         listView.setAdapter(adapter);
+                        btnAdd.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                final Dialog dialog = new Dialog(context);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.addmemory_layout);
+                                tvStartDate = (TextView) dialog.findViewById(R.id.tvStartDate);
+                                btnCalender = (Button)dialog.findViewById(R.id.btnCalender);
+                                tvLatitude = (TextView) dialog.findViewById(R.id.tvLatitude);
+                                tvLongtide = (TextView) dialog.findViewById(R.id.tvLongitude);
+
+                                Position position = MyLocationListener.GetCurrentPostion(context);
+                                tvLongtide.setText(""+position.longitude);
+                                tvLatitude.setText(""+position.latitude);
+
+                                etTitle = (EditText) dialog.findViewById(R.id.etTitle);
+                                etDescription = (EditText) dialog.findViewById(R.id.etDescription);
+                                etPlace = (EditText) dialog.findViewById(R.id.etPlace);
+                                btnConfirmVacation = (Button) dialog.findViewById(R.id.btnConfirmVacation);
+                                showDialogMemoryOnButtonClick();
+                                dialog.show();
+
+                                btnConfirmVacation.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(final View v) {
+                                        //Add memory : adds a memory to the user's vacation
+                                        //region ADD MEMORY
+                                        final AsyncCallInfo info = new AsyncCallInfo();
+                                        Memory memory = new Memory();
+                                        memory.title = (String) etTitle.getText().toString();
+                                        memory.description = etDescription.getText().toString();
+                                        memory.place = etPlace.getText().toString();
+                                        String start = tvStartDate.getText().toString().trim();
+                                        memory.time = Integer.parseInt(start.replaceAll("\\s+", ""));
+                                        Position pos = new Position();
+                                        pos.latitude = Float.parseFloat(tvLatitude.getText().toString());
+                                        pos.longitude = Float.parseFloat(tvLongtide.getText().toString());
+                                        memory.position = pos;
+
+                                        info.memory = memory;
+                                        info.vacation = vacation;
+                                        info.command = "AddMemory";
+                                        info.context = context;
+                                        AsyncCall asc = new AsyncCall() {
+                                            @Override
+                                            protected void onPostExecute(JSONObject jsonObject) {
+
+                                                try {
+                                                    int code = (int) jsonObject.get("code");
+                                                    //String responseMsg = (String)jsonObject.get("message");
+
+                                                    if (code == 204) {
+                                                        Toast.makeText(UserProfileActivity.this, info.memory.title + " added!", Toast.LENGTH_SHORT).show();
+                                                        populateMemoriesList(vacation);
+                                                        dialog.dismiss();
+                                                    } else {
+                                                        Toast.makeText(UserProfileActivity.this, code + " - someting went wrong!", Toast.LENGTH_SHORT).show();
+
+                                                    }
+
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                            }
+                                        };
+                                        asc.execute(info);
+                                        //endregion
+                                    }
+                                });
+                            }
+                        });
                     }
 
                 } catch (JSONException e) {
@@ -486,8 +580,125 @@ public class UserProfileActivity extends AppCompatActivity{
         });
 
         listView.setAdapter(adapter);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(context);
+
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.addmedia_layout);
+                imgViewAdd = (ImageView) dialog.findViewById(R.id.imgViewAdd);
+                btnGetFile = (Button) dialog.findViewById(R.id.btnGetFile);
+                btnGetFile.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        getIntent.setType("image/*");
+
+                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        pickIntent.setType("image/*");
+
+                        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+                        startActivityForResult(chooserIntent, PICK_IMAGE);
+                    }
+                });
+                dialog.show();
+
+
+                /*tvStartDate = (TextView) dialog.findViewById(R.id.tvStartDate);
+                btnCalender = (Button) dialog.findViewById(R.id.btnCalender);
+                tvLatitude = (TextView) dialog.findViewById(R.id.tvLatitude);
+                tvLongtide = (TextView) dialog.findViewById(R.id.tvLongitude);
+
+
+                Position position = MyLocationListener.GetCurrentPostion(context);
+                tvLongtide.setText("" + position.longitude);
+                tvLatitude.setText("" + position.latitude);
+
+                etTitle = (EditText) dialog.findViewById(R.id.etTitle);
+                etDescription = (EditText) dialog.findViewById(R.id.etDescription);
+                etPlace = (EditText) dialog.findViewById(R.id.etPlace);
+                btnConfirmVacation = (Button) dialog.findViewById(R.id.btnConfirmVacation);
+                showDialogMemoryOnButtonClick();
+                dialog.show();
+
+                btnConfirmVacation.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(final View v) {
+                        //Add memory : adds a memory to the user's vacation
+                        //region ADD MEMORY
+                        final AsyncCallInfo info = new AsyncCallInfo();
+                        Memory memory = new Memory();
+                        memory.title = (String) etTitle.getText().toString();
+                        memory.description = etDescription.getText().toString();
+                        memory.place = etPlace.getText().toString();
+                        String start = tvStartDate.getText().toString().trim();
+                        memory.time = Integer.parseInt(start.replaceAll("\\s+", ""));
+                        Position pos = new Position();
+                        pos.latitude = Float.parseFloat(tvLatitude.getText().toString());
+                        pos.longitude = Float.parseFloat(tvLongtide.getText().toString());
+                        memory.position = pos;
+
+                        info.memory = memory;
+                        info.vacation = vacation;
+                        info.command = "AddMemory";
+                        info.context = context;
+                        AsyncCall asc = new AsyncCall() {
+                            @Override
+                            protected void onPostExecute(JSONObject jsonObject) {
+
+                                try {
+                                    int code = (int) jsonObject.get("code");
+                                    //String responseMsg = (String)jsonObject.get("message");
+
+                                    if (code == 204) {
+                                        Toast.makeText(UserProfileActivity.this, info.memory.title + " added!", Toast.LENGTH_SHORT).show();
+                                        populateMemoriesList(vacation);
+                                        dialog.dismiss();
+                                    } else {
+                                        Toast.makeText(UserProfileActivity.this, code + " - someting went wrong!", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        };
+                        asc.execute(info);
+                        //endregion
+                    }
+                });*/
+            }
+        });
+
     }
 
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case SELECTED_PICTURE:
+                if(resultCode==RESULT_OK) {
+                    Uri uri = data.getData();
+                    String[]projection= {MediaStore.Images.Media.DATA};
+
+                    Cursor cursor = getContentResolver().query(uri,projection,null,null,null);
+                    cursor.moveToFirst();
+
+                    int columnIndex = cursor.getColumnIndex(projection[0]);
+                    String filePath = cursor.getString(columnIndex);
+                    cursor.close();
+
+                    Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
+                    Drawable d = new BitmapDrawable(yourSelectedImage);
+                    imgViewAdd.setBackground(d);
+
+                }
+                break;
+        }
+    }
 
 
 

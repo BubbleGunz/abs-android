@@ -69,4 +69,6 @@ E video/ljud ett krav
 24/11
 Gjorde så att en user ska kunna lägga till vacations, strulade lite med Datetime picker. Fick nästan att funka förutom att convertera Stringdatumet till en Int.
 
+25/11
+Lägga till vacation och memory funkar nu. började med att ladda upp bild ifrån enheten
 

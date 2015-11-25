@@ -26,16 +26,6 @@
             android:text="Username"
             android:id="@+id/tvUsername" />
 
-        <Button
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:text="-"
-            android:background = "@drawable/redbutton"
-            android:id="@+id/btnRemoveFriend"
-            android:textSize="30sp"
-            android:textColor="@drawable/btntxtcolor"
-            android:layout_gravity="right" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -98,5 +88,22 @@
         android:layout_margin="15dp"
         android:textSize="30sp"
         android:textColor="@drawable/btntxtcolor"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="25dp">
+
+        <Button
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:text="-"
+            android:background = "@drawable/redbutton"
+            android:id="@+id/btnRemoveFriend"
+            android:textSize="30sp"
+            android:textColor="@drawable/btntxtcolor"
+            android:layout_gravity="right" />
+    </LinearLayout>
 
 </RelativeLayout>
