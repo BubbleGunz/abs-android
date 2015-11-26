@@ -12,12 +12,18 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,6 +32,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -718,7 +725,7 @@ public class ApiRequest {
             urlConnection.addRequestProperty("Authorization","bearer " +myUser.token);
             OutputStream os = urlConnection.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
-            osw.write("title=" + memory.title+"&description="+memory.description+"&place="+memory.place+"&time="+memory.time+"&position="+memory.position);
+            osw.write("title=" + memory.title + "&description=" + memory.description + "&place=" + memory.place + "&time=" + memory.time + "&position=" + memory.position);
             osw.close();
             os.close();
 
@@ -744,6 +751,31 @@ public class ApiRequest {
         }
         //endregion
     }
+    //Upload file : Upload a file to the memory
+    public static JSONObject UploadFile(Memory memory,String filePath, Context context){
+        JSONObject jsonReturn = new JSONObject();
+        User myUser = SharedPref.GetTokenInfo(context);
+        HttpURLConnection urlConnection = null;
+
+        String charset = "UTF-8";
+        File uploadFile = new File(filePath);
+
+        String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/"+memory.id+"/pictures?width=100&height=100";
+
+        try {
+            MultipartUtility multipart = new MultipartUtility(requestURL, charset,context);
+
+             multipart.addFilePart("picture-file", uploadFile);
+
+             jsonReturn = multipart.finish();
+
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+
+        return jsonReturn;
+    }
+
 
 
 

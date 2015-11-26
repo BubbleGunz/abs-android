@@ -1,6 +1,7 @@
 package group9.android_project;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import org.json.JSONObject;
 
@@ -16,5 +17,7 @@ public class AsyncCallInfo {
     public Vacation vacation;
     public Memory memory;
     public Context context;
+    public Bitmap bitmap;
+    public String filePath;
 
 }

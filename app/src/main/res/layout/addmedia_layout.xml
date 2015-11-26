@@ -25,7 +25,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal">
@@ -36,6 +36,13 @@
                 android:layout_height="wrap_content"
                 android:text="Get file"
                 android:id="@+id/btnGetFile" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="FilePath"
+                android:id="@+id/tvFilepath" />
 
         </LinearLayout>
 

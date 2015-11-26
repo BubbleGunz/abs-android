@@ -47,7 +47,7 @@ public class UserProfileActivity extends AppCompatActivity{
     TextView tvUsername;
     TextView tvName;
     TextView tvVacation;
-    TextView tvMemory;
+    TextView tvMemory,tvFilepath;
     TextView tvSlash,tvStartDate,tvEndDate,tvLongtide,tvLatitude;
     EditText etTitle, etDescription, etPlace;
     private static final int SELECTED_PICTURE=1;
@@ -248,8 +248,6 @@ public class UserProfileActivity extends AppCompatActivity{
                                         if (code == 204) {
                                             Toast.makeText(context, profileUser.username + " removed from friends!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(context, FriendsActivity.class));
-                                        } else {
-
                                         }
 
                                     } catch (JSONException e) {
@@ -427,7 +425,7 @@ public class UserProfileActivity extends AppCompatActivity{
                             @Override
                             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                                     long arg3) {
-                                Memory memory = (Memory) adapter.getItemAtPosition(position);
+                                final Memory memory = (Memory) adapter.getItemAtPosition(position);
                                 tvSlash.setVisibility(View.VISIBLE);
                                 tvMemory.setText(memory.title);
                                 tvMemory.setVisibility(View.VISIBLE);
@@ -455,7 +453,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                             int code = (int) jsonObject.get("code");
                                             if (code == 200) {
                                                 ArrayList<Media> mediaList = (ArrayList<Media>) jsonObject.get("media");
-                                                populateMediaList(mediaList);
+                                                populateMediaList(mediaList,memory);
                                             } else {
                                                 return;
                                             }
@@ -557,7 +555,7 @@ public class UserProfileActivity extends AppCompatActivity{
     }
 
     //Fill the listview with Media
-    private void populateMediaList(ArrayList<Media> mediaArrayList) {
+    private void populateMediaList(final ArrayList<Media> mediaArrayList, final Memory  memory) {
 
         // Create the adapter to convert the array to views
         CustomMediaAdapter adapter = new CustomMediaAdapter(context, mediaArrayList);
@@ -587,6 +585,7 @@ public class UserProfileActivity extends AppCompatActivity{
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.addmedia_layout);
                 imgViewAdd = (ImageView) dialog.findViewById(R.id.imgViewAdd);
+                tvFilepath = (TextView) dialog.findViewById(R.id.tvFilepath);
                 btnGetFile = (Button) dialog.findViewById(R.id.btnGetFile);
                 btnGetFile.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
@@ -597,7 +596,7 @@ public class UserProfileActivity extends AppCompatActivity{
                         pickIntent.setType("image/*");
 
                         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                         startActivityForResult(chooserIntent, PICK_IMAGE);
                     }
@@ -605,42 +604,23 @@ public class UserProfileActivity extends AppCompatActivity{
                 dialog.show();
 
 
-                /*tvStartDate = (TextView) dialog.findViewById(R.id.tvStartDate);
-                btnCalender = (Button) dialog.findViewById(R.id.btnCalender);
-                tvLatitude = (TextView) dialog.findViewById(R.id.tvLatitude);
-                tvLongtide = (TextView) dialog.findViewById(R.id.tvLongitude);
-
-
-                Position position = MyLocationListener.GetCurrentPostion(context);
-                tvLongtide.setText("" + position.longitude);
-                tvLatitude.setText("" + position.latitude);
-
                 etTitle = (EditText) dialog.findViewById(R.id.etTitle);
                 etDescription = (EditText) dialog.findViewById(R.id.etDescription);
                 etPlace = (EditText) dialog.findViewById(R.id.etPlace);
                 btnConfirmVacation = (Button) dialog.findViewById(R.id.btnConfirmVacation);
-                showDialogMemoryOnButtonClick();
                 dialog.show();
 
                 btnConfirmVacation.setOnClickListener(new View.OnClickListener() {
                     public void onClick(final View v) {
-                        //Add memory : adds a memory to the user's vacation
-                        //region ADD MEMORY
+                        //Add/upload media : Upload an image to the database
+                        //region ADD/UPLOAD MEDIA
                         final AsyncCallInfo info = new AsyncCallInfo();
-                        Memory memory = new Memory();
-                        memory.title = (String) etTitle.getText().toString();
-                        memory.description = etDescription.getText().toString();
-                        memory.place = etPlace.getText().toString();
-                        String start = tvStartDate.getText().toString().trim();
-                        memory.time = Integer.parseInt(start.replaceAll("\\s+", ""));
-                        Position pos = new Position();
-                        pos.latitude = Float.parseFloat(tvLatitude.getText().toString());
-                        pos.longitude = Float.parseFloat(tvLongtide.getText().toString());
-                        memory.position = pos;
-
+                        imgViewAdd.buildDrawingCache();
+                        String filePath = tvFilepath.getText().toString();
+                        Bitmap imageToUpload = imgViewAdd.getDrawingCache();
                         info.memory = memory;
-                        info.vacation = vacation;
-                        info.command = "AddMemory";
+                        info.filePath = filePath;
+                        info.command = "UploadFile";
                         info.context = context;
                         AsyncCall asc = new AsyncCall() {
                             @Override
@@ -650,9 +630,9 @@ public class UserProfileActivity extends AppCompatActivity{
                                     int code = (int) jsonObject.get("code");
                                     //String responseMsg = (String)jsonObject.get("message");
 
-                                    if (code == 204) {
-                                        Toast.makeText(UserProfileActivity.this, info.memory.title + " added!", Toast.LENGTH_SHORT).show();
-                                        populateMemoriesList(vacation);
+                                    if (code == 200) {
+                                        Toast.makeText(UserProfileActivity.this, "Image added to "+ memory.title, Toast.LENGTH_SHORT).show();
+                                        populateMediaList(mediaArrayList,memory);
                                         dialog.dismiss();
                                     } else {
                                         Toast.makeText(UserProfileActivity.this, code + " - someting went wrong!", Toast.LENGTH_SHORT).show();
@@ -668,7 +648,7 @@ public class UserProfileActivity extends AppCompatActivity{
                         asc.execute(info);
                         //endregion
                     }
-                });*/
+                });
             }
         });
 
@@ -684,7 +664,7 @@ public class UserProfileActivity extends AppCompatActivity{
                     Uri uri = data.getData();
                     String[]projection= {MediaStore.Images.Media.DATA};
 
-                    Cursor cursor = getContentResolver().query(uri,projection,null,null,null);
+                    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
                     cursor.moveToFirst();
 
                     int columnIndex = cursor.getColumnIndex(projection[0]);
@@ -692,8 +672,9 @@ public class UserProfileActivity extends AppCompatActivity{
                     cursor.close();
 
                     Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
-                    Drawable d = new BitmapDrawable(yourSelectedImage);
-                    imgViewAdd.setBackground(d);
+                    //Drawable d = new BitmapDrawable(yourSelectedImage);
+                    tvFilepath.setText(filePath);
+                    imgViewAdd.setImageBitmap(yourSelectedImage);
 
                 }
                 break;

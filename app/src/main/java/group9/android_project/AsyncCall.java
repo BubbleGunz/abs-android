@@ -3,6 +3,7 @@ package group9.android_project;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Switch;
@@ -83,6 +84,13 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 Vacation vacation= params[0].vacation;
 
                 response = ApiRequest.AddMemory(memory,vacation, params[0].context);
+                return response;
+            }
+            case "UploadFile": {
+                Memory memory= params[0].memory;
+                String filePath= params[0].filePath;
+
+                response = ApiRequest.UploadFile(memory, filePath, params[0].context);
                 return response;
             }
             default:{
