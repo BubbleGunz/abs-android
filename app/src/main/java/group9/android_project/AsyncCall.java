@@ -93,6 +93,18 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 response = ApiRequest.UploadFile(memory, filePath, params[0].context);
                 return response;
             }
+            case "RemoveVacation": {
+                Vacation vacation= params[0].vacation;
+
+                response = ApiRequest.RemoveVacation(vacation, params[0].context);
+                return response;
+            }
+            case "PatchVacation": {
+                Vacation vacation= params[0].vacation;
+
+                response = ApiRequest.PatchVacation(vacation, params[0].context);
+                return response;
+            }
             default:{
                 break;
             }

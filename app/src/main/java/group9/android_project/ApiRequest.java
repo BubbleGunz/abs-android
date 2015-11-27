@@ -613,7 +613,7 @@ public class ApiRequest {
         //endregion
     }
 
-    //GET --------Remove friend to the user
+    //DELETE --------Remove friend to the user
     public static JSONObject RemoveFriend(User user,Context context){
         JSONObject jsonReturn = new JSONObject();
         HttpURLConnection urlConnection = null;
@@ -751,7 +751,8 @@ public class ApiRequest {
         }
         //endregion
     }
-    //Upload file : Upload a file to the memory
+
+    //POST --------Upload file : Upload a file to the memory
     public static JSONObject UploadFile(Memory memory,String filePath, Context context){
         JSONObject jsonReturn = new JSONObject();
         User myUser = SharedPref.GetTokenInfo(context);
@@ -774,6 +775,116 @@ public class ApiRequest {
         }
 
         return jsonReturn;
+    }
+
+    //DELETE --------Remove a vacation to the user
+    public static JSONObject RemoveVacation(Vacation vacation,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        String myUser = SharedPref.GetUsername(context);
+        try {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/vacations/"+vacation.id);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            User myToken = SharedPref.GetTokenInfo(context);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("DELETE");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myToken.token);
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if (code == 204) {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+            }
+            jsonReturn.put("code", code);
+        }
+
+
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //PATCH --------Update a vacation's info
+    public static JSONObject PatchVacation(Vacation vacation,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        try {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/vacations/"+vacation.id);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            User myToken = SharedPref.GetTokenInfo(context);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("PATCH");
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myToken.token);
+            urlConnection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.addRequestProperty("Accept", "application/json");
+
+            OutputStream os = urlConnection.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            osw.write("title=" + vacation.title + "&description=" + vacation.description + "&place=" + vacation.place + "&start=" + vacation.start + "&end=" + vacation.end);
+            osw.close();
+            os.close();
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if (code == 204) {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+            }
+            jsonReturn.put("code", code);
+
+            //endregion
+        }
+
+
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
     }
 
 

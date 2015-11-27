@@ -18,14 +18,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Remove Friend"
-                android:id="@+id/textView2" />
+                android:text="txt title"
+                android:id="@+id/tvRemoveTitle" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Are you sure you want to remove this user from your friendslist?"
+                android:text="txtinfo"
                 android:id="@+id/tvRemoveInfo"
                 android:gravity="center"
                 android:layout_margin="20dp" />

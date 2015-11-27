@@ -47,7 +47,7 @@ public class UserProfileActivity extends AppCompatActivity{
     TextView tvUsername;
     TextView tvName;
     TextView tvVacation;
-    TextView tvMemory,tvFilepath;
+    TextView tvMemory,tvFilepath,tvRemoveTitle,tvRemoveInfo;
     TextView tvSlash,tvStartDate,tvEndDate,tvLongtide,tvLatitude;
     EditText etTitle, etDescription, etPlace;
     private static final int SELECTED_PICTURE=1;
@@ -55,7 +55,7 @@ public class UserProfileActivity extends AppCompatActivity{
 
     ImageView imgViewAdd;
 
-    Button btnDelete,btnAdd,btnCalender,btnCalender2, btnConfirmVacation,btnGetFile;
+    Button btnDelete,btnAdd,btnCalender,btnCalender2, btnConfirmVacation,btnGetFile,btnEdit;
 
 
     Context context = this;
@@ -64,7 +64,6 @@ public class UserProfileActivity extends AppCompatActivity{
     int year_x,month_x,day_x;
     static final int DILOG_ID = 0;
     static final int DILOG_ID2 = 1;
-    static final int DILOG_ID3 = 2;
 
     //Dialog calender-popup - Shows a calender-popup and put the date in a textview.
     //region DIALOG CALENDER-POPUP
@@ -220,7 +219,13 @@ public class UserProfileActivity extends AppCompatActivity{
 
                     final Dialog dialog = new Dialog(context);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.removefriend_layout);
+                    dialog.setContentView(R.layout.remove_layout);
+                    tvRemoveTitle = (TextView)dialog.findViewById(R.id.tvRemoveTitle);
+                    tvRemoveInfo = (TextView)dialog.findViewById(R.id.tvRemoveInfo);
+
+                    tvRemoveInfo.setText("Are you sure you want to remove "+profileUser.username+" from your friendslist?");
+                    tvRemoveTitle.setText("Remove Friend");
+
                     dialog.show();
                     Button btnCancel;
                     btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
@@ -313,6 +318,68 @@ public class UserProfileActivity extends AppCompatActivity{
                                 populateMemoriesList(vacation);
                             }
                         });
+                        if(isUserMe) {
+                            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                                @Override
+                                public boolean onItemLongClick(AdapterView<?> adapter, View v,
+                                                               int position, long id) {
+                                    final Vacation vacation = (Vacation) adapter.getItemAtPosition(position);
+                                    final Dialog dialog = new Dialog(context);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.longclick_layout);
+                                    btnEdit = (Button) dialog.findViewById(R.id.btnEdit);
+                                    btnDelete = (Button) dialog.findViewById(R.id.btnRemove);
+                                    btnDelete.setText("Remove Vacation");
+
+                                    dialog.show();
+                                    Button btnCancel;
+                                    btnEdit.setOnClickListener(new View.OnClickListener() {
+                                        public void onClick(View v2) {
+                                            Intent i = new Intent(UserProfileActivity.this, EditActivity.class);
+                                            i.putExtra("vacation", vacation);
+                                            User nullUser = new User();
+                                            i.putExtra("user", nullUser);
+                                            startActivity(i);
+                                        }
+                                    });
+                                    Button btnDiaRemove;
+                                    btnDiaRemove = (Button) dialog.findViewById(R.id.btnRemove);
+                                    btnDiaRemove.setOnLongClickListener(new View.OnLongClickListener() {
+                                        @Override
+                                        public boolean onLongClick(View v) {
+                                            //Remove vacation: Removes a vacation
+                                            //region REMOVE VACATION
+                                            AsyncCallInfo info = new AsyncCallInfo();
+                                            info.command = "RemoveVacation";
+                                            info.user = profileUser;
+                                            info.vacation = vacation;
+                                            info.context = context;
+                                            AsyncCall asc = new AsyncCall() {
+                                                @Override
+                                                protected void onPostExecute(JSONObject jsonObject) {
+
+                                                    try {
+                                                        int code = (int) jsonObject.get("code");
+                                                        if (code == 204) {
+                                                            Toast.makeText(context, vacation.title + " removed from vacations!", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(context, UserProfileActivity.class));
+                                                        }
+
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                }
+                                            };
+                                            asc.execute(info);
+                                            //endregion
+                                            return true;
+                                        }
+                                    });
+                                    return true;
+                                }
+                            });
+                        }
 
                         listView.setAdapter(adapter);
                         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -631,8 +698,8 @@ public class UserProfileActivity extends AppCompatActivity{
                                     //String responseMsg = (String)jsonObject.get("message");
 
                                     if (code == 200) {
-                                        Toast.makeText(UserProfileActivity.this, "Image added to "+ memory.title, Toast.LENGTH_SHORT).show();
-                                        populateMediaList(mediaArrayList,memory);
+                                        Toast.makeText(UserProfileActivity.this, "Image added to " + memory.title, Toast.LENGTH_SHORT).show();
+                                        populateMediaList(mediaArrayList, memory);
                                         dialog.dismiss();
                                     } else {
                                         Toast.makeText(UserProfileActivity.this, code + " - someting went wrong!", Toast.LENGTH_SHORT).show();

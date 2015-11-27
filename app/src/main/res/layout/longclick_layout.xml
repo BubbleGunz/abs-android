@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center|center_horizontal">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout4"
+        android:gravity="center_horizontal">
+    >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/longclickTitle"
+            android:text="What to do?" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/linearLayout4"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:id="@+id/linearLayout3"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp">
+
+        <Button
+            android:layout_marginTop="15dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:id="@+id/btnEdit"
+            android:layout_gravity="center_horizontal"
+            android:padding="25dp"
+            />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="(Hold down to remove)"
+                android:id="@+id/textView3" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Remove vacation"
+                android:id="@+id/btnRemove"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="#ba7070"
+                android:padding="10dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

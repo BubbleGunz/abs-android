@@ -72,3 +72,5 @@ Gjorde så att en user ska kunna lägga till vacations, strulade lite med Datetime
 25/11
 Lägga till vacation och memory funkar nu. började med att ladda upp bild ifrån enheten
 
+26/11
+Ta bort vacation med hjälp av longclick, Edit vacation klart, ska börja med edita/delete usern 

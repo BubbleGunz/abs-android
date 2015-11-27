@@ -29,6 +29,9 @@
             android:name=".CreateAccActivity">
         </activity>
         <activity
+            android:name=".EditActivity">
+        </activity>
+        <activity
             android:name=".FlowActivity">
         </activity>
         <activity android:name=".FriendsActivity" >

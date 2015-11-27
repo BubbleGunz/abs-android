@@ -74,7 +74,8 @@
         android:layout_below="@+id/navHolder"
 
         android:verticalSpacing="2dp"
-        android:horizontalSpacing="2dp" />
+        android:horizontalSpacing="2dp"
+        android:longClickable="true" />
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="60dp"
