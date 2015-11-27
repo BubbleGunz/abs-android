@@ -92,19 +92,52 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="25dp"
+        android:gravity="right">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:drawableStart="@android:drawable/ic_menu_delete"
+                android:id="@+id/btnRemoveFriend"
+                android:textSize="30sp"
+                android:textColor="@drawable/btntxtcolor"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_gravity="right" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="testf"
+                android:id="@+id/tvBtnTextInfo"
+                android:layout_gravity="right"
+                android:gravity="center_vertical|center_horizontal" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="25dp">
-
         <Button
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:text="-"
-            android:background = "@drawable/redbutton"
-            android:id="@+id/btnRemoveFriend"
-            android:textSize="30sp"
-            android:textColor="@drawable/btntxtcolor"
+            android:id="@+id/btnEdit"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:padding="15dp"
+            android:drawableLeft="@android:drawable/ic_menu_edit"
+            android:background="@null"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_gravity="right" />
+
+        android:textSize="24sp"/>
     </LinearLayout>
 
 </RelativeLayout>

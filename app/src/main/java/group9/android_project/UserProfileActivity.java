@@ -140,8 +140,9 @@ public class UserProfileActivity extends AppCompatActivity{
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.user_layout);
+
+        //region Getting layout items
         tvUsername = (TextView) findViewById(R.id.tvUsername);
         tvName = (TextView) findViewById(R.id.tvName);
         tvVacation = (TextView) findViewById(R.id.tvVacation);
@@ -149,13 +150,17 @@ public class UserProfileActivity extends AppCompatActivity{
         tvMemory = (TextView) findViewById(R.id.tvMemory);
         btnDelete = (Button) findViewById(R.id.btnRemoveFriend);
         btnAdd = (Button) findViewById(R.id.btnAdd);
+        btnEdit =(Button) findViewById(R.id.btnEdit);
+        //endregion
 
-
+        //region Set visibility
         btnAdd.setVisibility(View.INVISIBLE);
         btnDelete.setVisibility(View.INVISIBLE);
         tvVacation.setVisibility(View.INVISIBLE);
         tvSlash.setVisibility(View.INVISIBLE);
         tvMemory.setVisibility(View.INVISIBLE);
+        btnEdit.setVisibility(View.INVISIBLE);
+        //endregion
 
         final Calendar cal = Calendar.getInstance();
         year_x = cal.get(Calendar.YEAR);
@@ -207,8 +212,18 @@ public class UserProfileActivity extends AppCompatActivity{
         {
             isUserMe = true;
             tvName.setText("Welcome");
+            btnEdit.setVisibility(View.VISIBLE);
             btnAdd.setVisibility(View.VISIBLE);
-
+            btnEdit.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Vacation vac = new Vacation();
+                    Intent i = new Intent(UserProfileActivity.this, EditActivity.class);
+                    i.putExtra("vacation",vac );
+                    User nullUser = new User();
+                    i.putExtra("user", profileUser);
+                    startActivity(i);
+                }
+            });
 
         }
 

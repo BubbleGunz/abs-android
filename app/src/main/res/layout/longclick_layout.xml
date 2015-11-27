@@ -34,7 +34,7 @@
             android:layout_marginTop="15dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Edit"
+            android:text="Edit Vacation"
             android:id="@+id/btnEdit"
             android:layout_gravity="center_horizontal"
             android:padding="25dp"
