@@ -17,7 +17,6 @@ public class AsyncCallInfo {
     public Vacation vacation;
     public Memory memory;
     public Context context;
-    public Bitmap bitmap;
     public String filePath;
 
 }

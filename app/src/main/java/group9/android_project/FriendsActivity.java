@@ -30,9 +30,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public class FriendsActivity extends Activity {
+public class FriendsActivity extends AppCompatActivity {
 
     Button btnAddFriend;
 
@@ -154,7 +156,17 @@ public class FriendsActivity extends Activity {
                     int code = (int)jsonObject.get("code");
                     if(code == 200) {
                         ArrayList<User> friendList = (ArrayList<User>)jsonObject.get("friends");
-                        populateUsersList(friendList);
+                        Collections.sort(friendList, new Comparator<User>() {
+                                    @Override
+                                    public int compare(User e1, User e2) {
+                                        // ascending order
+                                        return e1.firstname.compareTo(e2.firstname);
+
+                                        // descending order
+                                        //return id2.compareTo(id1);
+                                    }
+                                });
+                            populateUsersList(friendList);
                     }
                     else{
                         return;

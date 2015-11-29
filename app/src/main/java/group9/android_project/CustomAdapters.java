@@ -35,6 +35,8 @@ import java.util.ArrayList;
             TextView tvFirstname = (TextView) convertView.findViewById(R.id.tvFirstname);
             TextView tvLastname = (TextView) convertView.findViewById(R.id.tvLastname);
             TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
+            TextView tvAvatar = (TextView) convertView.findViewById(R.id.avatar);
+
             Button btnDelete = (Button) convertView.findViewById(R.id.btnRemoveFriend);
 
 
@@ -42,6 +44,8 @@ import java.util.ArrayList;
             tvFirstname.setText(user.firstname);
             tvLastname.setText(user.lastname);
             tvUsername.setText(user.username);
+            char firstLetter = user.firstname.charAt(0);
+            tvAvatar.setText(String.valueOf(firstLetter).toUpperCase());
 
 
             // Return the completed view to render on screen

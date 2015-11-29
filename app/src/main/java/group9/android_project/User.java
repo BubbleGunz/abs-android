@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -20,12 +21,5 @@ public class User implements Serializable {
         this.lastname = lastname;
         this.username = username;
     }
-
-   /* public static ArrayList<User> setFriend(ArrayList<User> friends) {
-        ArrayList<User> users = new ArrayList<User>();
-        users.add(new User(friends.g,friends.lastname,user.username));
-        return users;
-    }*/
-
 
 }

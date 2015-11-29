@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
-    '
-
-
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    >
     <LinearLayout
+        android:background="@drawable/textlines"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/titleHolder"
-        android:padding="25dp">
+        android:padding="15dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -42,7 +40,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
             android:id="@+id/tvVacation"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textColor="#708bba" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,7 +51,8 @@
             android:id="@+id/tvSlash"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,7 +60,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
             android:id="@+id/tvMemory"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textColor="#708bba" />
 
     </LinearLayout>
 
@@ -92,52 +93,18 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="25dp"
-        android:gravity="right">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:drawableStart="@android:drawable/ic_menu_delete"
-                android:id="@+id/btnRemoveFriend"
-                android:textSize="30sp"
-                android:textColor="@drawable/btntxtcolor"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_gravity="right" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="testf"
-                android:id="@+id/tvBtnTextInfo"
-                android:layout_gravity="right"
-                android:gravity="center_vertical|center_horizontal" />
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="25dp">
+        android:padding="15dp"
+        android:layout_height="wrap_content">
+
         <Button
-            android:id="@+id/btnEdit"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:padding="15dp"
-            android:drawableLeft="@android:drawable/ic_menu_edit"
-            android:background="@null"
+            android:drawableStart="@android:drawable/ic_menu_delete"
+            android:id="@+id/btnRemoveFriend"
             style="?android:attr/borderlessButtonStyle"
             android:layout_gravity="right" />
 
-        android:textSize="24sp"/>
     </LinearLayout>
 
 </RelativeLayout>

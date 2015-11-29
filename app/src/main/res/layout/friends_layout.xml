@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:foreground="@drawable/shape_window_dim"
-    android:paddingTop="@dimen/activity_vertical_margin"
-
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="group9.android_project.FriendsActivity"
     android:clickable="true"
     android:id="@+id/friendsContainer">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Friends"
-        android:id="@+id/labelFriends"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -34,9 +22,8 @@
 
     <ListView
         android:longClickable="true"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lvUsers"
-        android:layout_below="@+id/labelFriends" />
+        android:id="@+id/lvUsers" />
 
 </RelativeLayout>

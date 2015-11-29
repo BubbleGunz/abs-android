@@ -35,8 +35,6 @@ import java.util.logging.Logger;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    Context c;
-
     EditText username;
     EditText password;
     Button btnLoginLogin;

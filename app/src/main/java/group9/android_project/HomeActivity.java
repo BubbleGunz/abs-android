@@ -77,7 +77,7 @@ public class HomeActivity extends AppCompatActivity{
         Button btnFlow = (Button)findViewById(R.id.btnFlow);
         btnFlow.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, FlowActivity.class));
+                startActivity(new Intent(HomeActivity.this, MainActivity.class));
             }
         });
 

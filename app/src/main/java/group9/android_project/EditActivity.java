@@ -156,6 +156,7 @@ public class EditActivity extends AppCompatActivity {
         else
         {
             //EDIT USER
+
             etFirst.setHint("Firstname");
             etSecond.setHint("Lastname");
             etSecond.setLines(1);

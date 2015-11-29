@@ -1,26 +1,23 @@
 package group9.android_project;
 
-import android.app.TabActivity;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TabHost;
-
-import junit.framework.Test;
+import android.view.Window;
 
 /**
- * Created by Halling- on 2015-11-24.
+ * Created by Halling- on 2015-11-28.
  */
-public class FlowActivity extends AppCompatActivity
-{
+public class SettingsActivity extends AppCompatActivity {
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Context context = this;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.flow_layout);
+        setContentView(R.layout.main_layout);
 
 
 

@@ -1,5 +1,6 @@
 package group9.android_project;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -150,7 +152,6 @@ public class UserProfileActivity extends AppCompatActivity{
         tvMemory = (TextView) findViewById(R.id.tvMemory);
         btnDelete = (Button) findViewById(R.id.btnRemoveFriend);
         btnAdd = (Button) findViewById(R.id.btnAdd);
-        btnEdit =(Button) findViewById(R.id.btnEdit);
         //endregion
 
         //region Set visibility
@@ -159,7 +160,6 @@ public class UserProfileActivity extends AppCompatActivity{
         tvVacation.setVisibility(View.INVISIBLE);
         tvSlash.setVisibility(View.INVISIBLE);
         tvMemory.setVisibility(View.INVISIBLE);
-        btnEdit.setVisibility(View.INVISIBLE);
         //endregion
 
         final Calendar cal = Calendar.getInstance();
@@ -212,19 +212,9 @@ public class UserProfileActivity extends AppCompatActivity{
         {
             isUserMe = true;
             tvName.setText("Welcome");
-            btnEdit.setVisibility(View.VISIBLE);
             btnAdd.setVisibility(View.VISIBLE);
-            btnEdit.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Vacation vac = new Vacation();
-                    Intent i = new Intent(UserProfileActivity.this, EditActivity.class);
-                    i.putExtra("vacation",vac );
-                    User nullUser = new User();
-                    i.putExtra("user", profileUser);
-                    startActivity(i);
-                }
-            });
-
+            LinearLayout titleHolder = (LinearLayout)findViewById(R.id.titleHolder);
+            titleHolder.setVisibility(View.GONE);
         }
 
         if(!isUserMe) {
@@ -342,12 +332,12 @@ public class UserProfileActivity extends AppCompatActivity{
                                     final Dialog dialog = new Dialog(context);
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     dialog.setContentView(R.layout.longclick_layout);
-                                    btnEdit = (Button) dialog.findViewById(R.id.btnEdit);
                                     btnDelete = (Button) dialog.findViewById(R.id.btnRemove);
                                     btnDelete.setText("Remove Vacation");
+                                    btnEdit = (Button)dialog.findViewById(R.id.btnEdit);
+
 
                                     dialog.show();
-                                    Button btnCancel;
                                     btnEdit.setOnClickListener(new View.OnClickListener() {
                                         public void onClick(View v2) {
                                             Intent i = new Intent(UserProfileActivity.this, EditActivity.class);
