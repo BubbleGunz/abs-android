@@ -1,12 +1,20 @@
-KVAR ATT FIXA:
+FRÅGA: TIPS PÅ HUR VI SKA UPPDATERA MEDIALIST EFTER  ATT EN MEDIA ADDATS/DELETAS
+	SORTERA FRIENDSNAMNEN i listan
 
-Navigations menyn
-Lägga till vacations, memories å media
-Deleta grejer
-Put/patch på vissa saker
+BUGGAR:
+Efter att laddat upp bild - refresha median
+Remove media
+Remember checkbox
+DELETAR och sen klickar back så kmr man tillbaka
+REmove friend och kommer tillbaka med BACK
+
+//ATT GÖRA
+Lägga till all slags media
 Offline - cachea
+
+//ALT
 Flowet
-Fixa att man stänger bilden på click
+
 
 
 
@@ -74,3 +82,11 @@ Lägga till vacation och memory funkar nu. började med att ladda upp bild ifrån e
 
 26/11
 Ta bort vacation med hjälp av longclick, Edit vacation klart, ska börja med edita/delete usern 
+
+29/11
+Satt lite och fixade med tabsen och försökte fixa så att friendslistan sotrerar i namnordning
+
+30/11
+Satt och försökte komma åt databasen ett bra tag ,tills vi kom fram till att det inte att connecta via Simons internet hemma......
+Något skumt hände med databasen, funktioner som att tabort vän osv som alltid fungerat fick 500 server error lite då å då....Vet ej om det e AWS som spökar lr nått
+Gjorde delete på user, logout, edit user , delete media och memory

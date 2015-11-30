@@ -72,7 +72,9 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             int code = (int)jsonObject.get("code");
                             if(code == 200) {
-                                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                                i.putExtra("whichtab", 0);
+                                startActivity(i);
                             }
                             else{
                                 Toast.makeText(LoginActivity.this, "Wrong username or password!", Toast.LENGTH_SHORT).show();

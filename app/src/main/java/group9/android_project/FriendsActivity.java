@@ -83,8 +83,9 @@ public class FriendsActivity extends AppCompatActivity {
 
                                     if (code == 204) {
                                         Toast.makeText(FriendsActivity.this, searchedUser.username + " added as friend!", Toast.LENGTH_SHORT).show();
-                                        finish();
-                                        startActivity(getIntent());
+                                        Intent i = new Intent(FriendsActivity.this, MainActivity.class);
+                                        i.putExtra("whichtab", 2);
+                                        startActivity(i);
                                     } else {
                                         Toast.makeText(FriendsActivity.this, code + " - User not found!", Toast.LENGTH_SHORT).show();
 

@@ -70,14 +70,9 @@ public class ApiRequest {
             os.close();
 
             int code = urlConnection.getResponseCode();
-            urlConnection.disconnect();
             //endregion
-            if(code == 200) {
-                jsonReturn.put("code", code);
-            }
-            else{
-                jsonReturn.put("code", code);
-            }
+            jsonReturn.put("code", code);
+
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -623,25 +618,12 @@ public class ApiRequest {
             URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/" + myUser + "/friends/" + user.username);
             urlConnection = (HttpURLConnection) url.openConnection();
             User myToken = SharedPref.GetTokenInfo(context);
-            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("DELETE");
             urlConnection.setDoInput(true);
             urlConnection.setUseCaches(false);
             urlConnection.addRequestProperty("Authorization", "bearer " + myToken.token);
 
             int code = urlConnection.getResponseCode();
-            StringBuilder sb = new StringBuilder();
-            if (code == 204) {
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                sb = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-                br.close();
-
-            }
             jsonReturn.put("code", code);
         }
 
@@ -753,28 +735,32 @@ public class ApiRequest {
     }
 
     //POST --------Upload file : Upload a file to the memory
-    public static JSONObject UploadFile(Memory memory,String filePath, Context context){
+    public static JSONObject UploadFile(Memory memory,String filePath, Context context) {
         JSONObject jsonReturn = new JSONObject();
         User myUser = SharedPref.GetTokenInfo(context);
         HttpURLConnection urlConnection = null;
 
-        String charset = "UTF-8";
-        File uploadFile = new File(filePath);
+        if (filePath != null) {
+            String charset = "UTF-8";
+            File uploadFile = new File(filePath);
 
-        String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/"+memory.id+"/pictures?width=100&height=100";
+            String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/" + memory.id + "/pictures?width=100&height=100";
 
-        try {
-            MultipartUtility multipart = new MultipartUtility(requestURL, charset,context);
+            try {
+                MultipartUtility multipart = new MultipartUtility(requestURL, charset, context);
 
-             multipart.addFilePart("picture-file", uploadFile);
+                multipart.addFilePart("picture-file", uploadFile);
 
-             jsonReturn = multipart.finish();
+                jsonReturn = multipart.finish();
 
-        } catch (IOException ex) {
-            System.err.println(ex);
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
+
         }
 
         return jsonReturn;
+
     }
 
     //DELETE --------Remove a vacation to the user
@@ -787,7 +773,6 @@ public class ApiRequest {
             URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/vacations/"+vacation.id);
             urlConnection = (HttpURLConnection) url.openConnection();
             User myToken = SharedPref.GetTokenInfo(context);
-            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("DELETE");
             urlConnection.setDoInput(true);
             urlConnection.setUseCaches(false);
@@ -886,6 +871,227 @@ public class ApiRequest {
         }
         //endregion
     }
+
+    //PATCH --------Update a user's info
+    public static JSONObject PatchUser(User userToEdit,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        try {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+userToEdit.username);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            User myToken = SharedPref.GetTokenInfo(context);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("PATCH");
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myToken.token);
+            urlConnection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.addRequestProperty("Accept", "application/json");
+
+            OutputStream os = urlConnection.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+
+            osw.write("firstname=" + userToEdit.firstname + "&lastname=" + userToEdit.lastname + "&email=" + userToEdit.email);
+            osw.close();
+            os.close();
+            int code = urlConnection.getResponseCode();
+            jsonReturn.put("code", code);
+
+            //endregion
+        }
+
+
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //GET --------Get the users info
+    public static JSONObject GetUserInfo(User user,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+
+        //region CONNECTION
+        try
+        {
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+user.username);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + user.token);
+
+            int code = urlConnection.getResponseCode();
+            StringBuilder sb = new StringBuilder();
+            if(code == 200) {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+                User fetchedUser = new User();
+                JSONObject userJson = new JSONObject(sb.toString());
+                fetchedUser.firstname = userJson.getString("firstname");
+                fetchedUser.lastname = userJson.getString("lastname");
+                fetchedUser.username = userJson.getString("username");
+                fetchedUser.email = userJson.getString("email");
+
+                jsonReturn.put("user",fetchedUser);
+            }
+
+            else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+            }
+            jsonReturn.put("code",code);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //DELETE --------Remove friend to the user
+    public static JSONObject DeleteAccount(User user,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        try {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/users/"+user.username);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            User myToken = SharedPref.GetTokenInfo(context);
+            urlConnection.setRequestMethod("DELETE");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myToken.token);
+
+            int code = urlConnection.getResponseCode();
+            jsonReturn.put("code", code);
+        }
+
+
+
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //DELETE --------Delete a memory
+    public static JSONObject DeleteMemory( Memory memory,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        try {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/memories/"+memory.id);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            User myToken = SharedPref.GetTokenInfo(context);
+            urlConnection.setRequestMethod("DELETE");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myToken.token);
+
+            int code = urlConnection.getResponseCode();
+            jsonReturn.put("code", code);
+        }
+
+
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //DELETE --------Delete a media object
+    public static JSONObject DeleteMedia( Media media,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        try {
+            //region CONNECTION
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/media/"+media.id);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            User myToken = SharedPref.GetTokenInfo(context);
+            urlConnection.setRequestMethod("DELETE");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Authorization", "bearer " + myToken.token);
+
+            int code = urlConnection.getResponseCode();
+            jsonReturn.put("code", code);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
 
 
 

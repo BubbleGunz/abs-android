@@ -7,7 +7,13 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.sql.StatementEvent;
 
@@ -16,6 +22,10 @@ import javax.sql.StatementEvent;
  */
 public class MainActivity extends TabActivity
 {
+    TextView tvName,tvUsername;
+    Button btnSettings;
+    User userInfo  = new User();
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -25,14 +35,76 @@ public class MainActivity extends TabActivity
         setContentView(R.layout.main_layout);
         Resources res = getResources();
 
+        tvName = (TextView)findViewById(R.id.tvName);
+        tvUsername = (TextView)findViewById(R.id.tvUsername);
+        btnSettings = (Button)findViewById(R.id.btnSettings);
+
+
+
+
+        //GetUserInfo: Get the information of an user
+        //region GetUserInfo
+        AsyncCallInfo info = new AsyncCallInfo();
+        User myUser = SharedPref.GetTokenInfo(context);
+        myUser.username = SharedPref.GetUsername(context);
+        info.command = "GetUserInfo";
+        info.context = context;
+        info.user = myUser;
+
+        AsyncCall asc = new AsyncCall() {
+            @Override
+            protected void onPostExecute(JSONObject jsonObject) {
+
+                try {
+                    int code = (int) jsonObject.get("code");
+                    //String responseMsg = (String)jsonObject.get("message");
+
+                    if (code == 200) {
+                        userInfo = (User)jsonObject.get("user");
+                        tvName.setText(userInfo.firstname+" "+userInfo.lastname);
+                        tvUsername.setText(userInfo.username);
+                        return;
+                    } else {
+                        Toast.makeText(MainActivity.this, code + " - User not found!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        asc.execute(info);
+        //endregion
+
         // create the TabHost that will contain the Tabs
-        final TabHost tabHost = (TabHost)findViewById(android.R.id.tabhost);
+        //region TAB
+        final TabHost tabHost = getTabHost();
+
+        User user = new User();
+        user.username = SharedPref.GetUsername(context);
+
+        tabHost.addTab(tabHost.newTabSpec("tab1")
+                .setIndicator("", res.getDrawable(android.R.drawable.ic_menu_gallery))//ic_menu_home
+                .setContent(new Intent(this, FlowActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
 
 
-        TabHost.TabSpec tab1 = tabHost.newTabSpec("First Tab");
-        TabHost.TabSpec tab2 = tabHost.newTabSpec("Second Tab");
-        TabHost.TabSpec tab3 = tabHost.newTabSpec("Third Tab");
-        TabHost.TabSpec tab4 = tabHost.newTabSpec("Fourth Tab");
+        tabHost.addTab(tabHost.newTabSpec("tab2")
+                .setIndicator("", res.getDrawable(android.R.drawable.ic_menu_gallery))
+                .setContent(new Intent(this, UserProfileActivity.class)
+                        .putExtra("userObject", user)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
+
+
+        tabHost.addTab(tabHost.newTabSpec("tab3")
+                .setIndicator("", res.getDrawable(android.R.drawable.ic_menu_view))
+                .setContent(new Intent(this, FriendsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
+
 
         //Om vi vill ändra tabsens färg / bakgrund
 
@@ -51,32 +123,25 @@ public class MainActivity extends TabActivity
 
         // Set the Tab name and Activity
         // that will be opened when particular Tab will be selected
-        tab1.setIndicator("",
-                res.getDrawable(android.R.drawable.ic_menu_gallery));
-        Intent flowIntent = new Intent(this, FlowActivity.class);
-        tab1.setContent(flowIntent);
-        tabHost.addTab(tab1);
 
-        tab2.setIndicator("",
-                res.getDrawable(android.R.drawable.btn_star_big_on));
-        Intent vacationsIntent = new Intent(MainActivity.this, UserProfileActivity.class);
-        User user = new User();
-        user.username = SharedPref.GetUsername(context);
-        vacationsIntent.putExtra("userObject", user);
-        tab2.setContent(vacationsIntent);
-        tabHost.addTab(tab2);
 
-        tab3.setIndicator("",
-                res.getDrawable(android.R.drawable.btn_star_big_on));
-        Intent friendsIntent = new Intent(this, FriendsActivity.class);
-        tab3.setContent(friendsIntent);
-        tabHost.addTab(tab3);
+        Intent i = getIntent();
+        final int tabActive = (int) i.getSerializableExtra("whichtab");
+        if(tabActive > -1)
+        {
+            tabHost.setCurrentTab(tabActive);
+        }
 
-        tab4.setIndicator("",
-                res.getDrawable(android.R.drawable.btn_star_big_on));
-        Intent settingsIntent = new Intent(this, SettingsActivity.class);
-        tab4.setContent(settingsIntent);
-        tabHost.addTab(tab4);
+
+        //endregion
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                        Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                        i.putExtra("user",userInfo);
+                        startActivity(i);
+            }
+        });
 
     }
 }

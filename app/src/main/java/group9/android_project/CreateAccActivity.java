@@ -60,7 +60,25 @@ public class CreateAccActivity extends AppCompatActivity {
                 AsyncCallInfo info = new AsyncCallInfo();
                 info.command = "CreateUser";
                 info.userInfo = GetUserInfo();
-                AsyncCall asc = new AsyncCall();
+                AsyncCall asc = new AsyncCall() {
+                    @Override
+                    protected void onPostExecute(JSONObject jsonObject) {
+
+                        try {
+                            int code = (int) jsonObject.get("code");
+                            if (code == 200) {
+                                Toast.makeText(CreateAccActivity.this, "Account Created!", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(CreateAccActivity.this, LoginActivity.class));
+                            } else {
+                                Toast.makeText(CreateAccActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                };
                 asc.execute(info);
 
             }

@@ -99,10 +99,39 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 response = ApiRequest.RemoveVacation(vacation, params[0].context);
                 return response;
             }
+            case "DeleteMemory": {
+                Memory memory = params[0].memory;
+                response = ApiRequest.DeleteMemory(memory,params[0].context);
+                return response;
+            }
             case "PatchVacation": {
                 Vacation vacation= params[0].vacation;
 
                 response = ApiRequest.PatchVacation(vacation, params[0].context);
+                return response;
+            }
+            case "PatchUser": {
+                User userToEdit= params[0].user;
+
+                response = ApiRequest.PatchUser(userToEdit, params[0].context);
+                return response;
+            }
+            case "GetUserInfo": {
+                User user= params[0].user;
+
+                response = ApiRequest.GetUserInfo(user, params[0].context);
+                return response;
+            }
+            case "DeleteAccount": {
+                User user= params[0].user;
+
+                response = ApiRequest.DeleteAccount(user, params[0].context);
+                return response;
+            }
+            case "DeleteMedia": {
+                Media media= params[0].media;
+
+                response = ApiRequest.DeleteMedia(media, params[0].context);
                 return response;
             }
             default:{
