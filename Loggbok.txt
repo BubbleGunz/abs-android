@@ -81,6 +81,9 @@ Gjorde så att en user ska kunna lägga till vacations, strulade lite med Datetime
 Lägga till vacation och memory funkar nu. började med att ladda upp bild ifrån enheten
 
 26/11
+Upload bild fungerar, m?ste komprimera bilderna, tar l?ng tid att ladda media annars. meck som fan att f? det att funka ,satt i 4 timmar och leta...........RIP
+
+26/11
 Ta bort vacation med hjälp av longclick, Edit vacation klart, ska börja med edita/delete usern 
 
 29/11

@@ -30,12 +30,26 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal">
 
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Get file"
-                android:id="@+id/btnGetFile" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Getimage"
+                    android:id="@+id/btnGetFile" />
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Get video"
+                    android:id="@+id/btnGetVideo" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@mipmap/backgroundblur">
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
     <LinearLayout
         android:orientation="vertical"
@@ -36,7 +35,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/inputCreateAccLayout"
-            android:background="#50000000"
             android:padding="20dp">
 
             <EditText
@@ -46,9 +44,7 @@
                 android:inputType="text"
                 android:hint="Username"
                 android:ems="10"
-                android:id="@+id/etUsername"
-                android:textColorHint="#ffffff"
-                android:textColor="#ffffff" />
+                android:id="@+id/etUsername" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -57,9 +53,7 @@
                 android:ems="10"
                 android:id="@+id/etPassword"
                 android:hint="Password"
-                android:phoneNumber="false"
-                android:textColorHint="#ffffff"
-                android:textColor="#ffffff" />
+                android:phoneNumber="false"/>
 
             <EditText
                 android:layout_marginTop="5dp"
@@ -69,9 +63,7 @@
                 android:ems="10"
                 android:id="@+id/etConfirm"
                 android:hint="Confirm Password"
-                android:layout_gravity="center_horizontal"
-                android:textColorHint="#ffffff"
-                android:textColor="#ffffff" />
+                android:layout_gravity="center_horizontal"/>
 
             <EditText
                 android:layout_marginTop="5dp"
@@ -80,9 +72,7 @@
                 android:id="@+id/etFirstname"
                 android:hint="Firstname"
                 android:layout_gravity="center_horizontal"
-                android:inputType="text"
-                android:textColorHint="#ffffff"
-                android:textColor="#ffffff" />
+                android:inputType="text"/>
 
             <EditText
                 android:layout_marginTop="5dp"
@@ -90,9 +80,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Lastname"
                 android:id="@+id/etLastname"
-                android:inputType="text"
-                android:textColorHint="#ffffff"
-                android:textColor="#ffffff" />
+                android:inputType="text"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -101,9 +89,7 @@
                 android:ems="10"
                 android:ellipsize="start"
                 android:hint="Email"
-                android:id="@+id/etEmail"
-                android:textColorHint="#ffffff"
-                android:textColor="#fff" />
+                android:id="@+id/etEmail"/>
         </LinearLayout>
     </LinearLayout>
 

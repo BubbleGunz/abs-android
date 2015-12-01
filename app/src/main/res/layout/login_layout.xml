@@ -1,91 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
-    android:background="@mipmap/background">
+    android:layout_width="fill_parent" android:layout_height="fill_parent">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="68dp"
-        android:layout_marginRight="62dp"
-        android:layout_marginTop="150dp">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textFieldHolder">
-
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/etUsername"
-                android:hint="Enter username"
-                android:textColor="#ffffff"
-                android:autoText="false"
-                android:textColorHint="#ffffff"
-                android:inputType="text"
-                android:text="llala" />
-
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:id="@+id/etPassword"
-                android:hint="Enter password"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                android:text="hahahaha" />
-        </LinearLayout>
+        android:padding="70dp"
+        android:baselineAligned="true"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:gravity="center">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/checkboxHolder">
+            android:layout_height="250dp">
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Remember me"
-                android:id="@+id/cbRememberme"
-                android:checked="false"
-                android:textColor="#ffffff" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/loginButtonHolder">
-
-            <Button
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
-                android:id="@+id/btnLogin"
-                android:backgroundTint="#eee9e6" />
-        </LinearLayout>
+                android:id="@+id/textFieldHolder">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/singUpHolder">
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/etUsername"
+                    android:hint="Enter username"
+                    android:autoText="false"
+                    android:inputType="text"
+                    android:text="llala" />
 
-            <TextView
-                android:layout_width="wrap_content"
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:ems="10"
+                    android:id="@+id/etPassword"
+                    android:hint="Enter password"
+                    android:text="hahahaha" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign up now"
-                android:gravity="right"
-                android:id="@+id/tvSignUp"
-                android:layout_weight="1"
-                android:textColor="#FFFFFF"
-                android:layout_marginTop="40dp" />
+                android:id="@+id/checkboxHolder"
+                android:padding="10dp">
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Remember me"
+                    android:id="@+id/cbRemember"
+                    android:checked="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/loginButtonHolder">
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Login"
+                    android:id="@+id/btnLogin"
+                    android:backgroundTint="#eee9e6" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/linearLayout5" >
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Create Account"
+                    android:id="@+id/btnCreateAccount" />
+            </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

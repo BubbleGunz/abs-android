@@ -92,8 +92,8 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-        TextView signUp = (TextView)findViewById(R.id.tvSignUp);
-        signUp.setOnClickListener(new View.OnClickListener() {
+        Button btnCreateAccount = (Button)findViewById(R.id.btnCreateAccount);
+        btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, CreateAccActivity.class));
             }

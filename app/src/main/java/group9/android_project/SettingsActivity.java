@@ -109,6 +109,7 @@ public class SettingsActivity extends AppCompatActivity {
                             if (code == 204) {
                                 Toast.makeText(SettingsActivity.this, info.user.username + " changed!", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(SettingsActivity.this, MainActivity.class);
+                                SettingsActivity.this.finish();
                                 i.putExtra("whichtab", 0);
                                 startActivity(i);
                             }

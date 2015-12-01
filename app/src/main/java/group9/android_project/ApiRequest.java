@@ -626,9 +626,6 @@ public class ApiRequest {
             int code = urlConnection.getResponseCode();
             jsonReturn.put("code", code);
         }
-
-
-
         catch (JSONException e)
         {
             e.printStackTrace();
@@ -744,12 +741,16 @@ public class ApiRequest {
             String charset = "UTF-8";
             File uploadFile = new File(filePath);
 
-            String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/" + memory.id + "/pictures?width=100&height=100";
+            String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/" + memory.id + "/videos?width=0&height=0&ideocodec=0&videobitrate=0&framerate=0&audiocodec=0&audiobitrate=0&samplingrate=0";
+
+            //String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/" + memory.id + "/pictures?width=100&height=100";
 
             try {
                 MultipartUtility multipart = new MultipartUtility(requestURL, charset, context);
 
-                multipart.addFilePart("picture-file", uploadFile);
+                //multipart.addFilePart("picture-file", uploadFile);
+                multipart.addFilePart("video-file", uploadFile);
+
 
                 jsonReturn = multipart.finish();
 

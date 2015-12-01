@@ -41,6 +41,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Fetes on 2015-11-19.
@@ -55,6 +56,7 @@ public class UserProfileActivity extends AppCompatActivity{
     EditText etTitle, etDescription, etPlace;
     private static final int SELECTED_PICTURE=1;
     private static final int PICK_IMAGE=1;
+    private static final int SELECT_VIDEO = 3;
 
     ImageView imgViewAdd;
 
@@ -231,7 +233,7 @@ public class UserProfileActivity extends AppCompatActivity{
                     tvRemoveTitle = (TextView)dialog.findViewById(R.id.tvRemoveTitle);
                     tvRemoveInfo = (TextView)dialog.findViewById(R.id.tvRemoveInfo);
 
-                    tvRemoveInfo.setText("Are you sure you want to remove "+profileUser.username+" from your friendslist?");
+                    tvRemoveInfo.setText("Are you sure you want to remove " + profileUser.username+" from your friendslist?");
                     tvRemoveTitle.setText("Remove Friend");
 
                     dialog.show();
@@ -379,6 +381,8 @@ public class UserProfileActivity extends AppCompatActivity{
                                                             if (code == 204) {
                                                                 Toast.makeText(context, vacation.title + " removed from vacations!", Toast.LENGTH_SHORT).show();
                                                                 Intent i = new Intent(UserProfileActivity.this, MainActivity.class);
+                                                                UserProfileActivity.this.finish();
+                                                                dialog.dismiss();
                                                                 i.putExtra("whichtab", 1);
                                                                 startActivity(i);
                                                             }
@@ -444,6 +448,8 @@ public class UserProfileActivity extends AppCompatActivity{
                                                     if (code == 204) {
                                                         Toast.makeText(UserProfileActivity.this, info.vacation.title + " added!", Toast.LENGTH_SHORT).show();
                                                         Intent i = new Intent(UserProfileActivity.this, MainActivity.class);
+                                                        UserProfileActivity.this.finish();
+                                                        dialog.dismiss();
                                                         i.putExtra("whichtab", 1);
                                                         startActivity(i);
                                                     } else {
@@ -791,7 +797,38 @@ public class UserProfileActivity extends AppCompatActivity{
                 dialog.setContentView(R.layout.addmedia_layout);
                 imgViewAdd = (ImageView) dialog.findViewById(R.id.imgViewAdd);
                 tvFilepath = (TextView) dialog.findViewById(R.id.tvFilepath);
+                Button btnGetVideo = (Button) dialog.findViewById(R.id.btnGetVideo);
                 btnGetFile = (Button) dialog.findViewById(R.id.btnGetFile);
+                btnGetFile.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        getIntent.setType("image/*");
+
+                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        pickIntent.setType("image/*");
+
+                        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+                        startActivityForResult(chooserIntent, PICK_IMAGE);
+                    }
+                });
+                btnGetVideo.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        getIntent.setType("video/*");
+
+                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        pickIntent.setType("video/*");
+
+                        Intent chooserIntent = Intent.createChooser(getIntent, "Select a Video ");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+                        startActivityForResult(chooserIntent, SELECT_VIDEO);
+                    }
+                });
+
                 btnGetFile.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -815,8 +852,7 @@ public class UserProfileActivity extends AppCompatActivity{
                 btnConfirmVacation = (Button) dialog.findViewById(R.id.btnConfirmVacation);
                 dialog.show();
                 boolean isFileAdded = false;
-                if(tvFilepath.getText().equals(""))
-                {
+                if (tvFilepath.getText().equals("")) {
                     btnConfirmVacation.setEnabled(false);
                 }
 
@@ -842,7 +878,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                     //String responseMsg = (String)jsonObject.get("message");
 
                                     if (code == 200) {
-                                        Toast.makeText(UserProfileActivity.this, "Image added to " + memory.title, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(UserProfileActivity.this, "File added to " + memory.title, Toast.LENGTH_SHORT).show();
                                         dialog.dismiss();
                                         populateMediaList(mediaArrayList, memory);
                                     } else {
@@ -890,7 +926,35 @@ public class UserProfileActivity extends AppCompatActivity{
 
                 }
                 break;
+            case SELECT_VIDEO:
+                if (resultCode == RESULT_OK) {
+                    System.out.println("SELECT_VIDEO");
+                    Uri selectedVideoUri = data.getData();
+                    String selectedPath = getPath(selectedVideoUri);
+                    System.out.println("SELECT_VIDEO Path : " + selectedPath);
+
+                    tvFilepath.setText(selectedPath);
+                    btnConfirmVacation.setEnabled(true);
+
+                }
+                break;
         }
+    }
+    private String getPath(Uri uri) {
+        String[] projection = { MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media.DURATION};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        cursor.moveToFirst();
+        String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+        int fileSize = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
+        long duration = TimeUnit.MILLISECONDS.toSeconds(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)));
+
+
+        //some extra potentially useful data to help with filtering if necessary
+        System.out.println("size: " + fileSize);
+        System.out.println("path: " + filePath);
+        System.out.println("duration: " + duration);
+
+        return filePath;
     }
 
 
