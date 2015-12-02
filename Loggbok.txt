@@ -90,3 +90,10 @@ Satt lite och fixade med tabsen och försökte fixa så att friendslistan sotrerar 
 Satt och försökte komma åt databasen ett bra tag ,tills vi kom fram till att det inte att connecta via Simons internet hemma......
 Något skumt hände med databasen, funktioner som att tabort vän osv som alltid fungerat fick 500 server error lite då å då....Vet ej om det e AWS som spökar lr nått
 Gjorde delete på user, logout, edit user , delete media och memory
+
+1/12
+Fixa så att back knappen inte går tillbaka till vännen om man tagit bort den. Försökte oss på att ladda upp video , men får nått server error
+
+2/12
+Fortsatte försöka lägga upp video, fortfarande samma fel...
+Löste så att median uppdateras om man tar bort / lägger till media
