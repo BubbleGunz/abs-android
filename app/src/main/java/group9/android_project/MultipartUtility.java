@@ -51,7 +51,7 @@ public class MultipartUtility {
         httpConn.setDoOutput(true); // indicates POST method
         httpConn.setDoInput(true);
         httpConn.setRequestProperty("Content-Type",
-                "multipart/form-data; boundary=" + boundary);
+               "multipart/form-data; boundary=" + boundary);
         httpConn.setRequestProperty("Authorization", "bearer " + myUser.token);
         outputStream = httpConn.getOutputStream();
         writer = new PrintWriter(new OutputStreamWriter(outputStream, charset),
@@ -82,11 +82,9 @@ public class MultipartUtility {
      */
     public void addFilePart(String fieldName, File uploadFile)
             throws IOException {
-        Long milli = System.currentTimeMillis();
 
         String fileName = uploadFile.getName();
-        //fileName += milli.toString();
-        writer.append("--" + boundary).append(LINE_FEED);
+       // writer.append("--" + boundary).append(LINE_FEED);
         writer.append(
                 "Content-Disposition: form-data; name=\"" + fieldName
                         + "\"; filename=\"" + fileName + "\"")
@@ -95,6 +93,7 @@ public class MultipartUtility {
                 "Content-Type: "
                         + URLConnection.guessContentTypeFromName(fileName))
                 .append(LINE_FEED);
+
         writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
         writer.append(LINE_FEED);
         writer.flush();
@@ -118,7 +117,7 @@ public class MultipartUtility {
      * @param value - value of the header field
      */
     public void addHeaderField(String name, String value) {
-        writer.append(name + ": " + value).append(LINE_FEED);
+        writer.append(name + ", " + value).append(LINE_FEED);
         writer.flush();
     }
 

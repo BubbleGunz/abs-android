@@ -734,22 +734,20 @@ public class ApiRequest {
     //POST --------Upload file : Upload a file to the memory
     public static JSONObject UploadFile(Memory memory,String filePath, Context context) {
         JSONObject jsonReturn = new JSONObject();
-        User myUser = SharedPref.GetTokenInfo(context);
-        HttpURLConnection urlConnection = null;
 
         if (filePath != null) {
             String charset = "UTF-8";
             File uploadFile = new File(filePath);
 
-            String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/" + memory.id + "/videos?width=0&height=0&ideocodec=0&videobitrate=0&framerate=0&audiocodec=0&audiobitrate=0&samplingrate=0";
+            String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/"+memory.id+"/videos?width=26&height=26&videocodec=video&videobitrate=26&framerate=26&audiocodec=video&audiobitrate=26&channels=26&samplingrate=26";
 
             //String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/" + memory.id + "/pictures?width=100&height=100";
 
             try {
                 MultipartUtility multipart = new MultipartUtility(requestURL, charset, context);
 
-                //multipart.addFilePart("picture-file", uploadFile);
-                multipart.addFilePart("video-file", uploadFile);
+               // multipart.addFilePart("picture-file", uploadFile);
+               multipart.addFilePart("video-file", uploadFile);
 
 
                 jsonReturn = multipart.finish();
@@ -763,6 +761,21 @@ public class ApiRequest {
         return jsonReturn;
 
     }
+
+    public static JSONObject UploadFile2(Memory memory,String filePath, Context context) {
+        JSONObject jsonReturn = new JSONObject();
+        if (filePath != null) {
+            try {
+                int response = UploadFile.upLoad2Server(memory,filePath,context);
+                jsonReturn.put("code",response);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonReturn;
+
+    }
+
 
     //DELETE --------Remove a vacation to the user
     public static JSONObject RemoveVacation(Vacation vacation,Context context){

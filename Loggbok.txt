@@ -1,12 +1,9 @@
 FRÅGA: TIPS PÅ HUR VI SKA UPPDATERA MEDIALIST EFTER  ATT EN MEDIA ADDATS/DELETAS
-	SORTERA FRIENDSNAMNEN i listan
 
 BUGGAR:
 Efter att laddat upp bild - refresha median
-Remove media
 Remember checkbox
-DELETAR och sen klickar back så kmr man tillbaka
-REmove friend och kommer tillbaka med BACK
+
 
 //ATT GÖRA
 Lägga till all slags media

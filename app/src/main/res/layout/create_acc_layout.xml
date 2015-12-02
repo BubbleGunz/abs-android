@@ -94,27 +94,20 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_below="@+id/MainContentHolder"
-        android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:weightSum="1"
-        android:gravity="center"
-        android:id="@+id/CreateAccBtnHolder">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:gravity="center|center_horizontal">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Create Account"
-            android:padding="0dp"
-            android:layout_margin="0dp"
             android:id="@+id/btnCreateAccCreate"
-            android:layout_weight="0.4"
-            android:singleLine="false"
-            android:background="#83da8d" />
-        />
+            android:backgroundTint="#FF70BA78"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
     </LinearLayout>
-
 </RelativeLayout>

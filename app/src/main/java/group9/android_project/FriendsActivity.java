@@ -84,6 +84,7 @@ public class FriendsActivity extends AppCompatActivity {
                                     if (code == 204) {
                                         Toast.makeText(FriendsActivity.this, searchedUser.username + " added as friend!", Toast.LENGTH_SHORT).show();
                                         Intent i = new Intent(FriendsActivity.this, MainActivity.class);
+                                        dialog.dismiss();
                                         i.putExtra("whichtab", 2);
                                         startActivity(i);
                                     } else {
@@ -157,16 +158,17 @@ public class FriendsActivity extends AppCompatActivity {
                     int code = (int)jsonObject.get("code");
                     if(code == 200) {
                         ArrayList<User> friendList = (ArrayList<User>)jsonObject.get("friends");
-                        Collections.sort(friendList, new Comparator<User>() {
-                                    @Override
-                                    public int compare(User e1, User e2) {
-                                        // ascending order
-                                        return e1.firstname.compareTo(e2.firstname);
+                            Collections.sort(friendList, new Comparator<User>() {
+                                @Override
+                                public int compare(User e1, User e2) {
+                                    // ascending order
+                                    return e1.firstname.compareTo(e2.firstname);
 
-                                        // descending order
-                                        //return id2.compareTo(id1);
-                                    }
-                                });
+                                    // descending order
+                                    //return id2.compareTo(id1);
+                                }
+                            });
+
                             populateUsersList(friendList);
                     }
                     else{

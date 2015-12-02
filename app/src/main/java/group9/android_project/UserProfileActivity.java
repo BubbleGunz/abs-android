@@ -57,15 +57,14 @@ public class UserProfileActivity extends AppCompatActivity{
     private static final int SELECTED_PICTURE=1;
     private static final int PICK_IMAGE=1;
     private static final int SELECT_VIDEO = 3;
-
+    ArrayList<Media> mediaList = new ArrayList<>();
     ImageView imgViewAdd;
 
-    Button btnDelete,btnAdd,btnCalender,btnCalender2, btnConfirmVacation,btnGetFile,btnEdit;
+    Button btnDelete,btnAdd,btnCalender,btnCalender2, btnConfirm,btnGetFile,btnEdit;
 
 
     Context context = this;
     boolean isUserMe = false;
-    boolean isVacationsActive = false;
 
     int year_x,month_x,day_x;
     static final int DILOG_ID = 0;
@@ -291,7 +290,6 @@ public class UserProfileActivity extends AppCompatActivity{
 
 
     //Fill the listview with vacations
-
     private void populateVacationsList(final User profileUser) {
 
         //Getting vacations: Fetching the users vacations
@@ -335,6 +333,8 @@ public class UserProfileActivity extends AppCompatActivity{
                                 populateMemoriesList(vacation);
                             }
                         });
+
+                        //region If the user browsing it own vacations make it possible to longclick to edit/delete them
                         if(isUserMe) {
                             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                 @Override
@@ -402,6 +402,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                 }
                             });
                         }
+                        //endregion
 
                         listView.setAdapter(adapter);
                         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -409,6 +410,8 @@ public class UserProfileActivity extends AppCompatActivity{
                                 final Dialog dialog = new Dialog(context);
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 dialog.setContentView(R.layout.addvacation_layout);
+
+                                //region find layout items
                                 btnCalender = (Button)dialog.findViewById(R.id.btnCalender);
                                 btnCalender2 = (Button)dialog.findViewById(R.id.btnCalender2);
                                 tvStartDate = (TextView)dialog.findViewById(R.id.tvStartDate);
@@ -416,11 +419,13 @@ public class UserProfileActivity extends AppCompatActivity{
                                 etTitle = (EditText)dialog.findViewById(R.id.etTitle);
                                 etDescription = (EditText)dialog.findViewById(R.id.etDescription);
                                 etPlace = (EditText)dialog.findViewById(R.id.etPlace);
-                                btnConfirmVacation = (Button)dialog.findViewById(R.id.btnConfirmVacation);
+                                btnConfirm = (Button)dialog.findViewById(R.id.btnConfirm);
+                                //endregion
+
                                 showDialogOnButtonClick();
                                 dialog.show();
 
-                                btnConfirmVacation.setOnClickListener(new View.OnClickListener() {
+                                btnConfirm.setOnClickListener(new View.OnClickListener() {
                                     public void onClick(View v) {
                                         //Add friend: Add a friend to the logged in user
                                         //region ADD FRIEND
@@ -488,7 +493,6 @@ public class UserProfileActivity extends AppCompatActivity{
 
     //Fill the listview with Memories
     private void populateMemoriesList(final Vacation vacation) {
-        isVacationsActive = false;
         tvSlash.setVisibility(View.INVISIBLE);
         tvMemory.setVisibility(View.INVISIBLE);
 
@@ -514,6 +518,7 @@ public class UserProfileActivity extends AppCompatActivity{
                         // Attach the adapter to a ListView
                         GridView listView = (GridView) findViewById(R.id.gvItems);
 
+                        //region If user is browsing its own memories make it possible to longclick on them to delete them
                         if(isUserMe) {
                             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                 @Override
@@ -570,6 +575,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                 }
                             });
                         }
+                        //endregion
 
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
@@ -585,41 +591,13 @@ public class UserProfileActivity extends AppCompatActivity{
                                         populateMemoriesList(vacation);
                                     }
                                 });
-
-
-                                //Getting media: Fetching media from the clicked Memory
-                                //region GETTING MEDIA
-
-                                AsyncCallInfo info = new AsyncCallInfo();
-                                info.command = "GetMedia";
-                                info.memory = memory;
-                                info.context = context;
-
-                                AsyncCall asc = new AsyncCall() {
-                                    @Override
-                                    protected void onPostExecute(JSONObject jsonObject) {
-
-                                        try {
-                                            int code = (int) jsonObject.get("code");
-                                            if (code == 200) {
-                                                ArrayList<Media> mediaList = (ArrayList<Media>) jsonObject.get("media");
-                                                populateMediaList(mediaList,memory);
-                                            } else {
-                                                return;
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                };
-                                asc.execute(info);
-                                //endregion
-
+                                populateMediaList(memory);
                             }
                         });
 
                         listView.setAdapter(adapter);
+
+                        //region Add memory dialog
                         btnAdd.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 final Dialog dialog = new Dialog(context);
@@ -637,11 +615,11 @@ public class UserProfileActivity extends AppCompatActivity{
                                 etTitle = (EditText) dialog.findViewById(R.id.etTitle);
                                 etDescription = (EditText) dialog.findViewById(R.id.etDescription);
                                 etPlace = (EditText) dialog.findViewById(R.id.etPlace);
-                                btnConfirmVacation = (Button) dialog.findViewById(R.id.btnConfirmVacation);
+                                btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
                                 showDialogMemoryOnButtonClick();
                                 dialog.show();
 
-                                btnConfirmVacation.setOnClickListener(new View.OnClickListener() {
+                                btnConfirm.setOnClickListener(new View.OnClickListener() {
                                     public void onClick(final View v) {
                                         //Add memory : adds a memory to the user's vacation
                                         //region ADD MEMORY
@@ -690,6 +668,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                 });
                             }
                         });
+                        //endregion
                     }
 
                 } catch (JSONException e) {
@@ -705,202 +684,222 @@ public class UserProfileActivity extends AppCompatActivity{
     }
 
     //Fill the listview with Media
-    private void populateMediaList(final ArrayList<Media> mediaArrayList, final Memory  memory) {
+    private void populateMediaList(final Memory  memory) {
 
-        // Create the adapter to convert the array to views
-        CustomMediaAdapter adapter = new CustomMediaAdapter(context, mediaArrayList);
-        // Attach the adapter to a ListView
-        GridView listView = (GridView) findViewById(R.id.gvItems);
+        //Getting media: Fetching media from the clicked Memory
+        //region GETTING MEDIA
 
-        //region Delete Media on longclick
-        if(isUserMe) {
-            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapter, View v,
-                                               int position, long id) {
+        AsyncCallInfo info = new AsyncCallInfo();
+        info.command = "GetMedia";
+        info.memory = memory;
+        info.context = context;
 
-                    final Media media = (Media) adapter.getItemAtPosition(position);
-                    final Dialog dialog = new Dialog(context);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.longclick_layout);
-                    btnDelete = (Button) dialog.findViewById(R.id.btnRemove);
-                    btnDelete.setText("Delete Media");
-                    btnEdit = (Button) dialog.findViewById(R.id.btnEdit);
-                    btnEdit.setVisibility(View.GONE);
+        AsyncCall asc = new AsyncCall() {
+            @Override
+            protected void onPostExecute(JSONObject jsonObject) {
 
-                    dialog.show();
+                try {
+                    int code = (int) jsonObject.get("code");
+                    if (code == 200) {
+                        mediaList = (ArrayList<Media>) jsonObject.get("media");
 
-                    Button btnDiaRemove;
-                    btnDiaRemove = (Button) dialog.findViewById(R.id.btnRemove);
-                    btnDiaRemove.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            //Remove vacation: Removes a vacation
-                            //region REMOVE VACATION
-                            AsyncCallInfo info = new AsyncCallInfo();
-                            info.command = "DeleteMedia";
-                            info.media = media;
-                            info.context = context;
-                            AsyncCall asc = new AsyncCall() {
+                        // Create the adapter to convert the array to views
+                        CustomMediaAdapter adapter = new CustomMediaAdapter(context,mediaList);
+                        // Attach the adapter to a ListView
+                        GridView listView = (GridView) findViewById(R.id.gvItems);
+
+                        //region Delete Media on longclick if the media is the logged in users media
+                        if(isUserMe) {
+                            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                 @Override
-                                protected void onPostExecute(JSONObject jsonObject) {
+                                public boolean onItemLongClick(AdapterView<?> adapter, View v,
+                                                               int position, long id) {
 
-                                    try {
-                                        int code = (int) jsonObject.get("code");
-                                        if (code == 204) {
-                                            Toast.makeText(context, "File deleted from memory!", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-                                            populateMediaList(mediaArrayList, memory);
-                                        } else {
-                                            Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                    final Media media = (Media) adapter.getItemAtPosition(position);
+                                    final Dialog dialog = new Dialog(context);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.longclick_layout);
+                                    btnDelete = (Button) dialog.findViewById(R.id.btnRemove);
+                                    btnDelete.setText("Delete Media");
+                                    btnEdit = (Button) dialog.findViewById(R.id.btnEdit);
+                                    btnEdit.setVisibility(View.GONE);
 
+                                    dialog.show();
+
+                                    Button btnDiaRemove;
+                                    btnDiaRemove = (Button) dialog.findViewById(R.id.btnRemove);
+                                    btnDiaRemove.setOnLongClickListener(new View.OnLongClickListener() {
+                                        @Override
+                                        public boolean onLongClick(View v) {
+                                            //Remove vacation: Removes a vacation
+                                            //region REMOVE VACATION
+                                            AsyncCallInfo info = new AsyncCallInfo();
+                                            info.command = "DeleteMedia";
+                                            info.media = media;
+                                            info.context = context;
+                                            AsyncCall asc = new AsyncCall() {
+                                                @Override
+                                                protected void onPostExecute(JSONObject jsonObject) {
+
+                                                    try {
+                                                        int code = (int) jsonObject.get("code");
+                                                        if (code == 204) {
+                                                            Toast.makeText(context, "File deleted from memory!", Toast.LENGTH_SHORT).show();
+                                                            dialog.dismiss();
+                                                            populateMediaList(memory);
+                                                        } else {
+                                                            Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+
+                                                        }
+
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                }
+                                            };
+                                            asc.execute(info);
+                                            //endregion
+                                            return true;
                                         }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-
+                                    });
+                                    return true;
                                 }
-                            };
-                            asc.execute(info);
-                            //endregion
-                            return true;
+                            });
                         }
-                    });
-                    return true;
+                        //endregion
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                                    long arg3) {
+                                Media media = (Media) adapter.getItemAtPosition(position);
+                                final Dialog dialog = new Dialog(context);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                dialog.setContentView(R.layout.showimage_layout);
+                                ImageView imgView = (ImageView) dialog.findViewById(R.id.ivimagefull);
+                                imgView.setImageBitmap(media.bitmap);
+                                dialog.show();
+                            }
+                        });
+
+                        listView.setAdapter(adapter);
+                        btnAdd.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                final Dialog dialog = new Dialog(context);
+
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.addmedia_layout);
+                                imgViewAdd = (ImageView) dialog.findViewById(R.id.imgViewAdd);
+                                tvFilepath = (TextView) dialog.findViewById(R.id.tvFilepath);
+                                Button btnGetVideo = (Button) dialog.findViewById(R.id.btnGetVideo);
+                                btnGetFile = (Button) dialog.findViewById(R.id.btnGetFile);
+                                btnGetFile.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                                        getIntent.setType("image/*");
+
+                                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                        pickIntent.setType("image/*");
+
+                                        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+                                        startActivityForResult(chooserIntent, PICK_IMAGE);
+                                    }
+                                });
+                                btnGetVideo.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+
+                                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                                        getIntent.setType("video/*");
+
+                                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                        pickIntent.setType("video/*");
+
+                                        Intent chooserIntent = Intent.createChooser(getIntent, "Select a Video ");
+                                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+                                        startActivityForResult(chooserIntent, SELECT_VIDEO);
+                                    }
+                                });
+
+                                dialog.show();
+
+
+                                etTitle = (EditText) dialog.findViewById(R.id.etTitle);
+                                etDescription = (EditText) dialog.findViewById(R.id.etDescription);
+                                etPlace = (EditText) dialog.findViewById(R.id.etPlace);
+                                btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
+                                dialog.show();
+                                boolean isFileAdded = false;
+                                if (tvFilepath.getText().equals("")) {
+                                    btnConfirm.setEnabled(false);
+                                }
+
+
+                                btnConfirm.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(final View v) {
+                                        //Add/upload media : Upload an image to the database
+                                        //region ADD/UPLOAD MEDIA
+                                        final AsyncCallInfo info = new AsyncCallInfo();
+                                        imgViewAdd.buildDrawingCache();
+                                        String filePath = tvFilepath.getText().toString();
+                                        Bitmap imageToUpload = imgViewAdd.getDrawingCache();
+                                        info.memory = memory;
+                                        info.filePath = filePath;
+                                        info.command = "UploadFile2";
+                                        info.context = context;
+                                        AsyncCall asc = new AsyncCall() {
+                                            @Override
+                                            protected void onPostExecute(JSONObject jsonObject) {
+
+                                                try {
+                                                    int code = (int) jsonObject.get("code");
+                                                    //String responseMsg = (String)jsonObject.get("message");
+
+                                                    if (code == 200) {
+                                                        Toast.makeText(UserProfileActivity.this, "File added to " + memory.title, Toast.LENGTH_SHORT).show();
+                                                        dialog.dismiss();
+                                                        populateMediaList(memory);
+                                                    } else {
+                                                        Toast.makeText(UserProfileActivity.this, code + " - someting went wrong!", Toast.LENGTH_SHORT).show();
+
+                                                    }
+
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                            }
+                                        };
+                                        asc.execute(info);
+                                        //endregion
+
+                                    }
+                                });
+                            }
+                        });
+
+                    } else {
+                        return;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
-        }
+
+            }
+        };
+        asc.execute(info);
         //endregion
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View v, int position,
-                                    long arg3) {
-                Media media = (Media) adapter.getItemAtPosition(position);
-                final Dialog dialog = new Dialog(context);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.setContentView(R.layout.showimage_layout);
-                ImageView imgView = (ImageView) dialog.findViewById(R.id.ivimagefull);
-                imgView.setImageBitmap(media.bitmap);
-                dialog.show();
-            }
-        });
-
-        listView.setAdapter(adapter);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(context);
-
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.addmedia_layout);
-                imgViewAdd = (ImageView) dialog.findViewById(R.id.imgViewAdd);
-                tvFilepath = (TextView) dialog.findViewById(R.id.tvFilepath);
-                Button btnGetVideo = (Button) dialog.findViewById(R.id.btnGetVideo);
-                btnGetFile = (Button) dialog.findViewById(R.id.btnGetFile);
-                btnGetFile.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                        getIntent.setType("image/*");
-
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        pickIntent.setType("image/*");
-
-                        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-                        startActivityForResult(chooserIntent, PICK_IMAGE);
-                    }
-                });
-                btnGetVideo.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-
-                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                        getIntent.setType("video/*");
-
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        pickIntent.setType("video/*");
-
-                        Intent chooserIntent = Intent.createChooser(getIntent, "Select a Video ");
-                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-                        startActivityForResult(chooserIntent, SELECT_VIDEO);
-                    }
-                });
-
-                btnGetFile.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                        getIntent.setType("image/*");
-
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        pickIntent.setType("image/*");
-
-                        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-                        startActivityForResult(chooserIntent, PICK_IMAGE);
-                    }
-                });
-                dialog.show();
 
 
-                etTitle = (EditText) dialog.findViewById(R.id.etTitle);
-                etDescription = (EditText) dialog.findViewById(R.id.etDescription);
-                etPlace = (EditText) dialog.findViewById(R.id.etPlace);
-                btnConfirmVacation = (Button) dialog.findViewById(R.id.btnConfirmVacation);
-                dialog.show();
-                boolean isFileAdded = false;
-                if (tvFilepath.getText().equals("")) {
-                    btnConfirmVacation.setEnabled(false);
-                }
-
-
-                btnConfirmVacation.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(final View v) {
-                        //Add/upload media : Upload an image to the database
-                        //region ADD/UPLOAD MEDIA
-                        final AsyncCallInfo info = new AsyncCallInfo();
-                        imgViewAdd.buildDrawingCache();
-                        String filePath = tvFilepath.getText().toString();
-                        Bitmap imageToUpload = imgViewAdd.getDrawingCache();
-                        info.memory = memory;
-                        info.filePath = filePath;
-                        info.command = "UploadFile";
-                        info.context = context;
-                        AsyncCall asc = new AsyncCall() {
-                            @Override
-                            protected void onPostExecute(JSONObject jsonObject) {
-
-                                try {
-                                    int code = (int) jsonObject.get("code");
-                                    //String responseMsg = (String)jsonObject.get("message");
-
-                                    if (code == 200) {
-                                        Toast.makeText(UserProfileActivity.this, "File added to " + memory.title, Toast.LENGTH_SHORT).show();
-                                        dialog.dismiss();
-                                        populateMediaList(mediaArrayList, memory);
-                                    } else {
-                                        Toast.makeText(UserProfileActivity.this, code + " - someting went wrong!", Toast.LENGTH_SHORT).show();
-
-                                    }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        };
-                        asc.execute(info);
-                        //endregion
-                    }
-                });
-            }
-        });
 
     }
 
+    //After getting the file from the device
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -922,7 +921,7 @@ public class UserProfileActivity extends AppCompatActivity{
                     //Drawable d = new BitmapDrawable(yourSelectedImage);
                     tvFilepath.setText(filePath);
                     imgViewAdd.setImageBitmap(yourSelectedImage);
-                    btnConfirmVacation.setEnabled(true);
+                    btnConfirm.setEnabled(true);
 
                 }
                 break;
@@ -934,12 +933,14 @@ public class UserProfileActivity extends AppCompatActivity{
                     System.out.println("SELECT_VIDEO Path : " + selectedPath);
 
                     tvFilepath.setText(selectedPath);
-                    btnConfirmVacation.setEnabled(true);
+                    btnConfirm.setEnabled(true);
 
                 }
                 break;
         }
     }
+
+    //Video stuff
     private String getPath(Uri uri) {
         String[] projection = { MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media.DURATION};
         Cursor cursor = managedQuery(uri, projection, null, null, null);

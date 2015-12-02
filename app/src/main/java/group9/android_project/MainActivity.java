@@ -88,7 +88,7 @@ public class MainActivity extends TabActivity
         user.username = SharedPref.GetUsername(context);
 
         tabHost.addTab(tabHost.newTabSpec("tab1")
-                .setIndicator("", res.getDrawable(android.R.drawable.ic_menu_gallery))//ic_menu_home
+                .setIndicator("", res.getDrawable(android.R.drawable.ic_menu_directions))//ic_menu_home
                 .setContent(new Intent(this, FlowActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
 
