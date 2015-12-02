@@ -6,7 +6,9 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:gravity="center"
+        android:padding="50dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -31,7 +33,7 @@
             android:gravity="center_horizontal">
 
             <EditText
-                android:layout_width="250dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/etTitle"
                 android:inputType="textPersonName"
@@ -39,7 +41,7 @@
                 android:hint="Title" />
 
             <EditText
-                android:layout_width="250dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/etDescription"
                 android:layout_gravity="center_horizontal"
@@ -47,7 +49,7 @@
                 android:lines="1" />
 
             <EditText
-                android:layout_width="250dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:id="@+id/etPlace"
@@ -55,103 +57,110 @@
                 android:hint="Place" />
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:gravity="center_vertical" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Date"
-                    android:id="@+id/tvStartDate"
-                    android:gravity="left"
-                    android:layout_marginRight="20dp" />
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="right" >
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical" >
 
-                    <Button
-                        style="?android:attr/buttonStyleSmall"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Change"
-                        android:id="@+id/btnCalender"
-                        android:layout_marginLeft="50dp"
-                        android:layout_gravity="right" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Date"
+                        android:id="@+id/tvStartDate"
+                        android:gravity="left"
+                        android:layout_marginRight="20dp" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="right" >
+
+                        <Button
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Change"
+                            android:id="@+id/btnCalender"
+                            android:layout_marginLeft="50dp"
+                            android:layout_gravity="right" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:gravity="center_vertical" >
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Latitude"
-                    android:gravity="left"
-                    android:layout_marginRight="20dp" />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Latitude"
+                        android:gravity="left"
+                        android:layout_marginRight="20dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/tvLatitude" />
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Medium Text"
+                        android:id="@+id/tvLatitude" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:gravity="center_vertical">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Longitude"
-                    android:id="@+id/tvLongitue"
-                    android:gravity="left"
-                    android:layout_marginRight="20dp" />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Longitude"
+                        android:id="@+id/tvLongitue"
+                        android:gravity="left"
+                        android:layout_marginRight="20dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/tvLongitude" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Medium Text"
+                        android:id="@+id/tvLongitude" />
 
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center|center_horizontal">
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:id="@+id/btnCancel" />
-
-            <Button
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Add"
                 android:id="@+id/btnConfirm"
                 android:backgroundTint="#FF70BA78" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:id="@+id/btnCancel" />
+
         </LinearLayout>
 
     </LinearLayout>
