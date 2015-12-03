@@ -51,28 +51,13 @@ public class MultipartUtility {
         httpConn.setDoOutput(true); // indicates POST method
         httpConn.setDoInput(true);
         httpConn.setRequestProperty("Content-Type",
-               "multipart/form-data; boundary=" + boundary);
+                "multipart/form-data; boundary=" + boundary);
         httpConn.setRequestProperty("Authorization", "bearer " + myUser.token);
         outputStream = httpConn.getOutputStream();
         writer = new PrintWriter(new OutputStreamWriter(outputStream, charset),
                 true);
     }
 
-    /**
-     * Adds a form field to the request
-     * @param name field name
-     * @param value field value
-     */
-    public void addFormField(String name, String value) {
-        writer.append("--" + boundary).append(LINE_FEED);
-        writer.append("Content-Disposition: form-data; name=\"" + name + "\"")
-                .append(LINE_FEED);
-        writer.append("Content-Type: text/plain; charset=" + charset).append(
-                LINE_FEED);
-        writer.append(LINE_FEED);
-        writer.append(value).append(LINE_FEED);
-        writer.flush();
-    }
 
     /**
      * Adds a upload file section to the request
@@ -82,9 +67,12 @@ public class MultipartUtility {
      */
     public void addFilePart(String fieldName, File uploadFile)
             throws IOException {
+        Long milli = System.currentTimeMillis();
 
         String fileName = uploadFile.getName();
-       // writer.append("--" + boundary).append(LINE_FEED);
+        //fileName += milli.toString();
+        String fromname = URLConnection.guessContentTypeFromName(fileName);
+        writer.append("--" + boundary).append(LINE_FEED);
         writer.append(
                 "Content-Disposition: form-data; name=\"" + fieldName
                         + "\"; filename=\"" + fileName + "\"")
@@ -93,10 +81,11 @@ public class MultipartUtility {
                 "Content-Type: "
                         + URLConnection.guessContentTypeFromName(fileName))
                 .append(LINE_FEED);
-
         writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
         writer.append(LINE_FEED);
         writer.flush();
+
+
 
         FileInputStream inputStream = new FileInputStream(uploadFile);
         byte[] buffer = new byte[4096];
@@ -111,15 +100,6 @@ public class MultipartUtility {
         writer.flush();
     }
 
-    /**
-     * Adds a header field to the request.
-     * @param name - name of the header field
-     * @param value - value of the header field
-     */
-    public void addHeaderField(String name, String value) {
-        writer.append(name + ", " + value).append(LINE_FEED);
-        writer.flush();
-    }
 
     /**
      * Completes the request and receives response from the server.

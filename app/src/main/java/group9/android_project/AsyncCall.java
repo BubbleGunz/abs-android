@@ -134,12 +134,7 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 response = ApiRequest.DeleteMedia(media, params[0].context);
                 return response;
             }
-            case "UploadFile2": {
-                Memory memory= params[0].memory;
 
-                response = ApiRequest.UploadFile2(memory,params[0].filePath, params[0].context);
-                return response;
-            }
             default:{
                 break;
             }

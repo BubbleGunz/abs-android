@@ -746,8 +746,8 @@ public class ApiRequest {
             try {
                 MultipartUtility multipart = new MultipartUtility(requestURL, charset, context);
 
-               // multipart.addFilePart("picture-file", uploadFile);
                multipart.addFilePart("video-file", uploadFile);
+               //multipart.addFilePart("picture-file", uploadFile);
 
 
                 jsonReturn = multipart.finish();
@@ -758,20 +758,6 @@ public class ApiRequest {
 
         }
 
-        return jsonReturn;
-
-    }
-
-    public static JSONObject UploadFile2(Memory memory,String filePath, Context context) {
-        JSONObject jsonReturn = new JSONObject();
-        if (filePath != null) {
-            try {
-                int response = UploadFile.upLoad2Server(memory,filePath,context);
-                jsonReturn.put("code",response);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
         return jsonReturn;
 
     }

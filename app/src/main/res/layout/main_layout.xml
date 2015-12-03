@@ -2,7 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+
     <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchHolder">
+
+        <SearchView
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginBottom="7dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/searchHolder"
         android:background="@drawable/textlines"
         android:orientation="vertical"
         android:layout_width="fill_parent"
@@ -55,6 +74,7 @@
     </TabHost>
 
     <LinearLayout
+        android:layout_below="@+id/searchHolder"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:padding="15dp"

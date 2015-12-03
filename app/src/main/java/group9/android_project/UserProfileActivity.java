@@ -38,9 +38,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -305,8 +309,20 @@ public class UserProfileActivity extends AppCompatActivity{
 
                 try {
                     int code = (int) jsonObject.get("code");
-                    if (code == 200) {
+                    if (code == 20) {
+
                         ArrayList<Vacation> vacationList = (ArrayList<Vacation>) jsonObject.get("vacations");
+                        //File[] fileToCache = vacationList.toArray(new File[vacationList.size()]);
+                        try {
+                            JSONObject json = new JSONObject();
+                            json.put("vacs",vacationList);
+                            String jsonString = json.toString();
+                            CacheData.createCachedFile(UserProfileActivity.this, "vacationlist", jsonString);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
                         tvVacation.setVisibility(View.INVISIBLE);
                         tvSlash.setVisibility(View.INVISIBLE);
                         tvMemory.setVisibility(View.INVISIBLE);
@@ -476,6 +492,35 @@ public class UserProfileActivity extends AppCompatActivity{
                         });
 
                     } else {
+                        try {
+                            JSONObject vacsJson = (JSONObject)CacheData.readCachedFile(UserProfileActivity.this, "vacationlist");
+
+                            tvVacation.setVisibility(View.INVISIBLE);
+                            tvSlash.setVisibility(View.INVISIBLE);
+                            tvMemory.setVisibility(View.INVISIBLE);
+                            Object json = vacsJson.get("vacs");
+                            ArrayList<Vacation> vacationlistsCache = (ArrayList<Vacation>) json;
+
+                            // Create the adapter to convert the array to views
+                            CustomVacationsAdapter adapter = new CustomVacationsAdapter(context, vacationlistsCache);
+                            // Attach the adapter to a ListView
+                            GridView listView = (GridView) findViewById(R.id.gvItems);
+
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                                        long arg3) {
+                                    Vacation vacation = (Vacation) adapter.getItemAtPosition(position);
+                                    tvVacation.setText(vacation.title);
+                                    tvVacation.setVisibility(View.VISIBLE);
+                                }
+                            });
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         return;
                     }
 
@@ -849,7 +894,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                         Bitmap imageToUpload = imgViewAdd.getDrawingCache();
                                         info.memory = memory;
                                         info.filePath = filePath;
-                                        info.command = "UploadFile2";
+                                        info.command = "UploadFile";
                                         info.context = context;
                                         AsyncCall asc = new AsyncCall() {
                                             @Override

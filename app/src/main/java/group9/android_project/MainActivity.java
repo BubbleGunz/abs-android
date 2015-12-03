@@ -7,7 +7,9 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +26,15 @@ public class MainActivity extends TabActivity
 {
     TextView tvName,tvUsername;
     Button btnSettings;
+    SearchView svSearchMemory;
     User userInfo  = new User();
 
+
+    public void onClick(View v)
+    {
+        InputMethodManager im = ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE));
+ //       im.showSoftInput(editText, 0);
+    }
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -38,6 +47,7 @@ public class MainActivity extends TabActivity
         tvName = (TextView)findViewById(R.id.tvName);
         tvUsername = (TextView)findViewById(R.id.tvUsername);
         btnSettings = (Button)findViewById(R.id.btnSettings);
+        svSearchMemory = (SearchView)findViewById(R.id.search_bar);
 
 
 
