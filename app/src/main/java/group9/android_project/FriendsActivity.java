@@ -58,9 +58,17 @@ public class FriendsActivity extends AppCompatActivity {
                 dialog.show();
                 Button btnDiaAddFriend;
                 btnDiaAddFriend = (Button)dialog.findViewById(R.id.btnDiaAddFriend);
+                final SearchView svFriend = (SearchView) dialog.findViewById(R.id.svFriend);
+                svFriend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        svFriend.setIconified(false);
+                    }
+                });
+
                 btnDiaAddFriend.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v2) {
-                        SearchView svFriend = (SearchView) dialog.findViewById(R.id.svFriend);
+
                         CharSequence svFriendCharSeq = svFriend.getQuery();
                         String svFriendString = svFriendCharSeq.toString();
 

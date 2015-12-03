@@ -309,7 +309,7 @@ public class UserProfileActivity extends AppCompatActivity{
 
                 try {
                     int code = (int) jsonObject.get("code");
-                    if (code == 20) {
+                    if (code == 200) {
 
                         ArrayList<Vacation> vacationList = (ArrayList<Vacation>) jsonObject.get("vacations");
                         //File[] fileToCache = vacationList.toArray(new File[vacationList.size()]);

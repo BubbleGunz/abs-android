@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:gravity="center">
 
 >
 
@@ -10,8 +11,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/titleHolder"
+        android:padding="20dp"
         android:gravity="center">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,27 +22,35 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_below="@+id/titleHolder"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_below="@id/titleHolder"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout">
+        android:gravity="center"
+        android:paddingBottom="30dp">
 
         <SearchView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleHolder"
             android:id="@+id/svFriend"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="34dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginBottom="7dp"
             android:queryHint="Search username" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/svFriend"
+            android:layout_height="wrap_content"
+            android:text="Add friend"
+            android:id="@+id/btnDiaAddFriend"
+            android:layout_centerHorizontal="true"
+            android:clickable="true" />
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add friend"
-        android:id="@+id/btnDiaAddFriend"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -54,6 +54,8 @@ public class MainActivity extends TabActivity
         info.context = context;
         info.user = myUser;
 
+
+
         AsyncCall asc = new AsyncCall() {
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
@@ -150,5 +152,13 @@ public class MainActivity extends TabActivity
             }
         });
 
+        svSearchMemory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                svSearchMemory.setIconified(false);
+            }
+        });
+
     }
+
 }
