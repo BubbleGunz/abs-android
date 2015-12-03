@@ -30,11 +30,6 @@ public class MainActivity extends TabActivity
     User userInfo  = new User();
 
 
-    public void onClick(View v)
-    {
-        InputMethodManager im = ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE));
- //       im.showSoftInput(editText, 0);
-    }
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -48,8 +43,6 @@ public class MainActivity extends TabActivity
         tvUsername = (TextView)findViewById(R.id.tvUsername);
         btnSettings = (Button)findViewById(R.id.btnSettings);
         svSearchMemory = (SearchView)findViewById(R.id.search_bar);
-
-
 
 
         //GetUserInfo: Get the information of an user
@@ -114,6 +107,10 @@ public class MainActivity extends TabActivity
                 .setIndicator("", res.getDrawable(android.R.drawable.ic_menu_view))
                 .setContent(new Intent(this, FriendsActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)));
+
+        tabHost.addTab(tabHost.newTabSpec("tab4")
+                .setIndicator("", res.getDrawable(android.R.drawable.ic_menu_camera))
+                .setContent(new Intent(this, CameraActivity.class)));
 
 
         //Om vi vill ändra tabsens färg / bakgrund
