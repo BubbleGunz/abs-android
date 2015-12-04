@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,13 +34,20 @@ import android.widget.SearchView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.loopj.android.http.*;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,39 +55,41 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cz.msebera.android.httpclient.Header;
+
 /**
  * Created by Fetes on 2015-11-19.
  */
-public class UserProfileActivity extends AppCompatActivity{
+public class UserProfileActivity extends AppCompatActivity {
 
     TextView tvUsername;
     TextView tvName;
     TextView tvVacation;
-    TextView tvMemory,tvFilepath,tvRemoveTitle,tvRemoveInfo;
-    TextView tvSlash,tvStartDate,tvEndDate,tvLongtide,tvLatitude;
+    TextView tvMemory, tvFilepath, tvRemoveTitle, tvRemoveInfo;
+    TextView tvSlash, tvStartDate, tvEndDate, tvLongtide, tvLatitude;
     EditText etTitle, etDescription, etPlace;
-    private static final int SELECTED_PICTURE=1;
-    private static final int PICK_IMAGE=1;
+    private static final int SELECTED_PICTURE = 1;
+    private static final int PICK_IMAGE = 1;
     private static final int SELECT_VIDEO = 3;
     ArrayList<Media> mediaList = new ArrayList<>();
     ImageView imgViewAdd;
 
-    Button btnDelete,btnAdd,btnCalender,btnCalender2, btnConfirm,btnGetFile,btnEdit;
+    Button btnDelete, btnAdd, btnCalender, btnCalender2, btnConfirm, btnGetFile, btnEdit;
 
 
     Context context = this;
     boolean isUserMe = false;
 
-    int year_x,month_x,day_x;
+    int year_x, month_x, day_x;
     static final int DILOG_ID = 0;
     static final int DILOG_ID2 = 1;
 
     //Dialog calender-popup - Shows a calender-popup and put the date in a textview.
     //region DIALOG CALENDER-POPUP
 
-    public void showDialogOnButtonClick(){
+    public void showDialogOnButtonClick() {
         btnCalender.setOnClickListener(
-                new View.OnClickListener(){
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showDialog(DILOG_ID);
@@ -87,7 +97,7 @@ public class UserProfileActivity extends AppCompatActivity{
                 }
         );
         btnCalender2.setOnClickListener(
-                new View.OnClickListener(){
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showDialog(DILOG_ID2);
@@ -97,9 +107,10 @@ public class UserProfileActivity extends AppCompatActivity{
 
 
     }
+
     public void showDialogMemoryOnButtonClick() {
         btnCalender.setOnClickListener(
-                new View.OnClickListener(){
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showDialog(DILOG_ID);
@@ -109,45 +120,44 @@ public class UserProfileActivity extends AppCompatActivity{
     }
 
 
-        @Override
-    protected Dialog onCreateDialog(int id){
-        if(id == DILOG_ID)
-        {
-            return new DatePickerDialog(this,dpickerListner,year_x,month_x,day_x);
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if (id == DILOG_ID) {
+            return new DatePickerDialog(this, dpickerListner, year_x, month_x, day_x);
         }
-        if(id == DILOG_ID2)
-        {
-            return new DatePickerDialog(this,dpickerListner2,year_x,month_x,day_x);
+        if (id == DILOG_ID2) {
+            return new DatePickerDialog(this, dpickerListner2, year_x, month_x, day_x);
         }
         return null;
     }
+
     private DatePickerDialog.OnDateSetListener dpickerListner
-            = new DatePickerDialog.OnDateSetListener(){
-            @Override
-            public void onDateSet(DatePicker view, int year,int monthOfYear,int dayOfMonth) {
-                year_x = year;
-                month_x = monthOfYear + 1;
-                day_x = dayOfMonth;
-                Toast.makeText(UserProfileActivity.this, year_x +" / " + month_x+ " / "+day_x,Toast.LENGTH_SHORT).show();
-                String date = year_x +" "+ month_x +" "+ day_x;
-                tvStartDate.setText(date);
-            }
-    };
-    private DatePickerDialog.OnDateSetListener dpickerListner2
-            = new DatePickerDialog.OnDateSetListener(){
+            = new DatePickerDialog.OnDateSetListener() {
         @Override
-        public void onDateSet(DatePicker view, int year,int monthOfYear,int dayOfMonth) {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             year_x = year;
             month_x = monthOfYear + 1;
             day_x = dayOfMonth;
-            Toast.makeText(UserProfileActivity.this, year_x +" / " + month_x+ " / "+day_x,Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserProfileActivity.this, year_x + " / " + month_x + " / " + day_x, Toast.LENGTH_SHORT).show();
+            String date = year_x + " " + month_x + " " + day_x;
+            tvStartDate.setText(date);
+        }
+    };
+    private DatePickerDialog.OnDateSetListener dpickerListner2
+            = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            year_x = year;
+            month_x = monthOfYear + 1;
+            day_x = dayOfMonth;
+            Toast.makeText(UserProfileActivity.this, year_x + " / " + month_x + " / " + day_x, Toast.LENGTH_SHORT).show();
             tvEndDate.setText(year_x + " " + month_x + " " + day_x);
         }
     };
 
     //endregion
     @Override
-    protected void onCreate (Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_layout);
 
@@ -213,19 +223,22 @@ public class UserProfileActivity extends AppCompatActivity{
 
         Intent i = getIntent();
         final User profileUser = (User) i.getSerializableExtra("userObject");
+        final ArrayList<Memory> memoryArrayList = (ArrayList<Memory>) i.getSerializableExtra("searchedmemories");
+
 
         tvUsername.setText(profileUser.username);
         tvName.setText(profileUser.firstname + " " + profileUser.lastname);
-        if(profileUser.username.equals(SharedPref.GetUsername(context)))
-        {
+        String loggedUser = SharedPref.GetUsername(context);
+        loggedUser = loggedUser.toLowerCase();
+        if (profileUser.username.toLowerCase().equals(loggedUser)) {
             isUserMe = true;
             tvName.setText("Welcome");
             btnAdd.setVisibility(View.VISIBLE);
-            LinearLayout titleHolder = (LinearLayout)findViewById(R.id.titleHolder);
+            LinearLayout titleHolder = (LinearLayout) findViewById(R.id.titleHolder);
             titleHolder.setVisibility(View.GONE);
         }
 
-        if(!isUserMe) {
+        if (!isUserMe) {
             btnDelete.setVisibility(View.VISIBLE);
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -233,10 +246,10 @@ public class UserProfileActivity extends AppCompatActivity{
                     final Dialog dialog = new Dialog(context);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.remove_layout);
-                    tvRemoveTitle = (TextView)dialog.findViewById(R.id.tvRemoveTitle);
-                    tvRemoveInfo = (TextView)dialog.findViewById(R.id.tvRemoveInfo);
+                    tvRemoveTitle = (TextView) dialog.findViewById(R.id.tvRemoveTitle);
+                    tvRemoveInfo = (TextView) dialog.findViewById(R.id.tvRemoveInfo);
 
-                    tvRemoveInfo.setText("Are you sure you want to remove " + profileUser.username+" from your friendslist?");
+                    tvRemoveInfo.setText("Are you sure you want to remove " + profileUser.username + " from your friendslist?");
                     tvRemoveTitle.setText("Remove Friend");
 
                     dialog.show();
@@ -269,8 +282,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                             UserProfileActivity.this.finish();
                                             i.putExtra("whichtab", 2);
                                             startActivity(i);
-                                        }
-                                        else{
+                                        } else {
                                             Toast.makeText(context, "Couldnt remove friend", Toast.LENGTH_SHORT).show();
 
                                         }
@@ -289,7 +301,12 @@ public class UserProfileActivity extends AppCompatActivity{
                 }
             });
         }
-        populateVacationsList(profileUser);
+        if(memoryArrayList == null) {
+            populateVacationsList(profileUser);
+        }
+        else {
+            populateSearchedMemoriesList(memoryArrayList);
+        }
     }
 
 
@@ -309,15 +326,15 @@ public class UserProfileActivity extends AppCompatActivity{
 
                 try {
                     int code = (int) jsonObject.get("code");
-                    if (code == 200) {
+                    if (code == 20) {
 
                         ArrayList<Vacation> vacationList = (ArrayList<Vacation>) jsonObject.get("vacations");
                         //File[] fileToCache = vacationList.toArray(new File[vacationList.size()]);
                         try {
                             JSONObject json = new JSONObject();
-                            json.put("vacs",vacationList);
+                            json.put("vacs", vacationList);
                             String jsonString = json.toString();
-                            CacheData.createCachedFile(UserProfileActivity.this, "vacationlist", jsonString);
+                            CacheData.createCachedFile(UserProfileActivity.this,vacationList);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -351,70 +368,70 @@ public class UserProfileActivity extends AppCompatActivity{
                         });
 
                         //region If the user browsing it own vacations make it possible to longclick to edit/delete them
-                        if(isUserMe) {
+                        if (isUserMe) {
                             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                 @Override
                                 public boolean onItemLongClick(AdapterView<?> adapter, View v,
                                                                int position, long id) {
 
-                                        final Vacation vacation = (Vacation) adapter.getItemAtPosition(position);
-                                        final Dialog dialog = new Dialog(context);
-                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                        dialog.setContentView(R.layout.longclick_layout);
-                                        btnDelete = (Button) dialog.findViewById(R.id.btnRemove);
-                                        btnDelete.setText("Delete Vacation");
-                                        btnEdit = (Button) dialog.findViewById(R.id.btnEdit);
+                                    final Vacation vacation = (Vacation) adapter.getItemAtPosition(position);
+                                    final Dialog dialog = new Dialog(context);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.longclick_layout);
+                                    btnDelete = (Button) dialog.findViewById(R.id.btnRemove);
+                                    btnDelete.setText("Delete Vacation");
+                                    btnEdit = (Button) dialog.findViewById(R.id.btnEdit);
 
 
-                                        dialog.show();
-                                        btnEdit.setOnClickListener(new View.OnClickListener() {
-                                            public void onClick(View v2) {
-                                                Intent i = new Intent(UserProfileActivity.this, EditActivity.class);
-                                                i.putExtra("vacation", vacation);
-                                                User nullUser = new User();
-                                                i.putExtra("user", nullUser);
-                                                startActivity(i);
-                                            }
-                                        });
-                                        Button btnDiaRemove;
-                                        btnDiaRemove = (Button) dialog.findViewById(R.id.btnRemove);
-                                        btnDiaRemove.setOnLongClickListener(new View.OnLongClickListener() {
-                                            @Override
-                                            public boolean onLongClick(View v) {
-                                                //Remove vacation: Removes a vacation
-                                                //region REMOVE VACATION
-                                                AsyncCallInfo info = new AsyncCallInfo();
-                                                info.command = "RemoveVacation";
-                                                info.user = profileUser;
-                                                info.vacation = vacation;
-                                                info.context = context;
-                                                AsyncCall asc = new AsyncCall() {
-                                                    @Override
-                                                    protected void onPostExecute(JSONObject jsonObject) {
+                                    dialog.show();
+                                    btnEdit.setOnClickListener(new View.OnClickListener() {
+                                        public void onClick(View v2) {
+                                            Intent i = new Intent(UserProfileActivity.this, EditActivity.class);
+                                            i.putExtra("vacation", vacation);
+                                            User nullUser = new User();
+                                            i.putExtra("user", nullUser);
+                                            startActivity(i);
+                                        }
+                                    });
+                                    Button btnDiaRemove;
+                                    btnDiaRemove = (Button) dialog.findViewById(R.id.btnRemove);
+                                    btnDiaRemove.setOnLongClickListener(new View.OnLongClickListener() {
+                                        @Override
+                                        public boolean onLongClick(View v) {
+                                            //Remove vacation: Removes a vacation
+                                            //region REMOVE VACATION
+                                            AsyncCallInfo info = new AsyncCallInfo();
+                                            info.command = "RemoveVacation";
+                                            info.user = profileUser;
+                                            info.vacation = vacation;
+                                            info.context = context;
+                                            AsyncCall asc = new AsyncCall() {
+                                                @Override
+                                                protected void onPostExecute(JSONObject jsonObject) {
 
-                                                        try {
-                                                            int code = (int) jsonObject.get("code");
-                                                            if (code == 204) {
-                                                                Toast.makeText(context, vacation.title + " removed from vacations!", Toast.LENGTH_SHORT).show();
-                                                                Intent i = new Intent(UserProfileActivity.this, MainActivity.class);
-                                                                UserProfileActivity.this.finish();
-                                                                dialog.dismiss();
-                                                                i.putExtra("whichtab", 1);
-                                                                startActivity(i);
-                                                            }
-
-                                                        } catch (JSONException e) {
-                                                            e.printStackTrace();
+                                                    try {
+                                                        int code = (int) jsonObject.get("code");
+                                                        if (code == 204) {
+                                                            Toast.makeText(context, vacation.title + " removed from vacations!", Toast.LENGTH_SHORT).show();
+                                                            Intent i = new Intent(UserProfileActivity.this, MainActivity.class);
+                                                            UserProfileActivity.this.finish();
+                                                            dialog.dismiss();
+                                                            i.putExtra("whichtab", 1);
+                                                            startActivity(i);
                                                         }
 
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
                                                     }
-                                                };
-                                                asc.execute(info);
-                                                //endregion
-                                                return true;
-                                            }
-                                        });
-                                        return true;
+
+                                                }
+                                            };
+                                            asc.execute(info);
+                                            //endregion
+                                            return true;
+                                        }
+                                    });
+                                    return true;
                                 }
                             });
                         }
@@ -428,14 +445,14 @@ public class UserProfileActivity extends AppCompatActivity{
                                 dialog.setContentView(R.layout.addvacation_layout);
 
                                 //region find layout items
-                                btnCalender = (Button)dialog.findViewById(R.id.btnCalender);
-                                btnCalender2 = (Button)dialog.findViewById(R.id.btnCalender2);
-                                tvStartDate = (TextView)dialog.findViewById(R.id.tvStartDate);
-                                tvEndDate = (TextView)dialog.findViewById(R.id.tvEndDate);
-                                etTitle = (EditText)dialog.findViewById(R.id.etTitle);
-                                etDescription = (EditText)dialog.findViewById(R.id.etDescription);
-                                etPlace = (EditText)dialog.findViewById(R.id.etPlace);
-                                btnConfirm = (Button)dialog.findViewById(R.id.btnConfirm);
+                                btnCalender = (Button) dialog.findViewById(R.id.btnCalender);
+                                btnCalender2 = (Button) dialog.findViewById(R.id.btnCalender2);
+                                tvStartDate = (TextView) dialog.findViewById(R.id.tvStartDate);
+                                tvEndDate = (TextView) dialog.findViewById(R.id.tvEndDate);
+                                etTitle = (EditText) dialog.findViewById(R.id.etTitle);
+                                etDescription = (EditText) dialog.findViewById(R.id.etDescription);
+                                etPlace = (EditText) dialog.findViewById(R.id.etPlace);
+                                btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
                                 //endregion
 
                                 showDialogOnButtonClick();
@@ -447,14 +464,14 @@ public class UserProfileActivity extends AppCompatActivity{
                                         //region ADD FRIEND
                                         final AsyncCallInfo info = new AsyncCallInfo();
                                         Vacation vac = new Vacation();
-                                        vac.title = (String)etTitle.getText().toString();
+                                        vac.title = (String) etTitle.getText().toString();
                                         vac.description = etDescription.getText().toString();
                                         vac.place = etPlace.getText().toString();
 
                                         String start = tvStartDate.getText().toString().trim();
-                                        vac.start = Integer.parseInt(start.replaceAll("\\s+",""));
+                                        vac.start = Integer.parseInt(start.replaceAll("\\s+", ""));
                                         String end = tvEndDate.getText().toString().trim();
-                                        vac.end = Integer.parseInt(end.replaceAll("\\s+",""));
+                                        vac.end = Integer.parseInt(end.replaceAll("\\s+", ""));
                                         info.vacation = vac;
                                         info.command = "AddVacation";
                                         info.context = context;
@@ -493,16 +510,15 @@ public class UserProfileActivity extends AppCompatActivity{
 
                     } else {
                         try {
-                            JSONObject vacsJson = (JSONObject)CacheData.readCachedFile(UserProfileActivity.this, "vacationlist");
+                            ArrayList<Vacation> vacationArrayListCached = CacheData.readCachedFile(UserProfileActivity.this);
 
                             tvVacation.setVisibility(View.INVISIBLE);
                             tvSlash.setVisibility(View.INVISIBLE);
                             tvMemory.setVisibility(View.INVISIBLE);
-                            Object json = vacsJson.get("vacs");
-                            ArrayList<Vacation> vacationlistsCache = (ArrayList<Vacation>) json;
+
 
                             // Create the adapter to convert the array to views
-                            CustomVacationsAdapter adapter = new CustomVacationsAdapter(context, vacationlistsCache);
+                            CustomVacationsAdapter adapter = new CustomVacationsAdapter(context, vacationArrayListCached);
                             // Attach the adapter to a ListView
                             GridView listView = (GridView) findViewById(R.id.gvItems);
 
@@ -517,8 +533,6 @@ public class UserProfileActivity extends AppCompatActivity{
                             });
 
                         } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
                         return;
@@ -564,7 +578,7 @@ public class UserProfileActivity extends AppCompatActivity{
                         GridView listView = (GridView) findViewById(R.id.gvItems);
 
                         //region If user is browsing its own memories make it possible to longclick on them to delete them
-                        if(isUserMe) {
+                        if (isUserMe) {
                             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                 @Override
                                 public boolean onItemLongClick(AdapterView<?> adapter, View v,
@@ -649,13 +663,13 @@ public class UserProfileActivity extends AppCompatActivity{
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 dialog.setContentView(R.layout.addmemory_layout);
                                 tvStartDate = (TextView) dialog.findViewById(R.id.tvStartDate);
-                                btnCalender = (Button)dialog.findViewById(R.id.btnCalender);
+                                btnCalender = (Button) dialog.findViewById(R.id.btnCalender);
                                 tvLatitude = (TextView) dialog.findViewById(R.id.tvLatitude);
                                 tvLongtide = (TextView) dialog.findViewById(R.id.tvLongitude);
 
                                 Position position = MyLocationListener.GetCurrentPostion(context);
-                                tvLongtide.setText(""+position.longitude);
-                                tvLatitude.setText(""+position.latitude);
+                                tvLongtide.setText("" + position.longitude);
+                                tvLatitude.setText("" + position.latitude);
 
                                 etTitle = (EditText) dialog.findViewById(R.id.etTitle);
                                 etDescription = (EditText) dialog.findViewById(R.id.etDescription);
@@ -729,7 +743,7 @@ public class UserProfileActivity extends AppCompatActivity{
     }
 
     //Fill the listview with Media
-    private void populateMediaList(final Memory  memory) {
+    private void populateMediaList(final Memory memory) {
 
         //Getting media: Fetching media from the clicked Memory
         //region GETTING MEDIA
@@ -749,12 +763,12 @@ public class UserProfileActivity extends AppCompatActivity{
                         mediaList = (ArrayList<Media>) jsonObject.get("media");
 
                         // Create the adapter to convert the array to views
-                        CustomMediaAdapter adapter = new CustomMediaAdapter(context,mediaList);
+                        CustomMediaAdapter adapter = new CustomMediaAdapter(context, mediaList);
                         // Attach the adapter to a ListView
                         GridView listView = (GridView) findViewById(R.id.gvItems);
 
                         //region Delete Media on longclick if the media is the logged in users media
-                        if(isUserMe) {
+                        if (isUserMe) {
                             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                 @Override
                                 public boolean onItemLongClick(AdapterView<?> adapter, View v,
@@ -892,7 +906,26 @@ public class UserProfileActivity extends AppCompatActivity{
                                         imgViewAdd.buildDrawingCache();
                                         String filePath = tvFilepath.getText().toString();
                                         Bitmap imageToUpload = imgViewAdd.getDrawingCache();
-                                        info.memory = memory;
+                                        File myFile = new File(filePath);
+                                        User token = new User();
+                                        token = SharedPref.GetTokenInfo(context);
+
+                                        AsyncHttpResponseHandler responseHandler = new AsyncHttpResponseHandler() {
+                                            @Override
+                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                Toast.makeText(UserProfileActivity.this, "File added to " + memory.title, Toast.LENGTH_SHORT).show();
+                                                dialog.dismiss();
+                                                populateMediaList(memory);
+                                            }
+
+                                            @Override
+                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                Toast.makeText(UserProfileActivity.this, statusCode+" - someting went wrong!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        };
+
+                                        Upload.postVideo(memory.id, myFile, token.token, responseHandler);
+                                        /*info.memory = memory;
                                         info.filePath = filePath;
                                         info.command = "UploadFile";
                                         info.context = context;
@@ -921,7 +954,7 @@ public class UserProfileActivity extends AppCompatActivity{
                                         };
                                         asc.execute(info);
                                         //endregion
-
+*/
                                     }
                                 });
                             }
@@ -940,20 +973,18 @@ public class UserProfileActivity extends AppCompatActivity{
         //endregion
 
 
-
-
     }
 
     //After getting the file from the device
     @Override
-    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode){
+        switch (requestCode) {
             case SELECTED_PICTURE:
-                if(resultCode==RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
-                    String[]projection= {MediaStore.Images.Media.DATA};
+                    String[] projection = {MediaStore.Images.Media.DATA};
 
                     Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
                     cursor.moveToFirst();
@@ -987,7 +1018,7 @@ public class UserProfileActivity extends AppCompatActivity{
 
     //Video stuff
     private String getPath(Uri uri) {
-        String[] projection = { MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media.DURATION};
+        String[] projection = {MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media.DURATION};
         Cursor cursor = managedQuery(uri, projection, null, null, null);
         cursor.moveToFirst();
         String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
@@ -1003,6 +1034,50 @@ public class UserProfileActivity extends AppCompatActivity{
         return filePath;
     }
 
+    //Fill the listview with Memories
+    private void populateSearchedMemoriesList(final ArrayList<Memory> memoryArrayList) {
+        tvSlash.setVisibility(View.INVISIBLE);
+        tvMemory.setVisibility(View.INVISIBLE);
+        tvVacation.setText("Searched");
+        tvVacation.setVisibility(View.VISIBLE);
 
+        //Getting memories: Fetching the memories from the clicked vacation
+        //region GETTING MEMORIES
 
+        // Create the adapter to convert the array to views
+        CustomMemoriesAdapter adapter = new CustomMemoriesAdapter(context, memoryArrayList);
+        // Attach the adapter to a ListView
+        GridView listView = (GridView) findViewById(R.id.gvItems);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3) {
+                final Memory memory = (Memory) adapter.getItemAtPosition(position);
+                tvSlash.setVisibility(View.VISIBLE);
+
+                tvMemory.setText(memory.title);
+                tvMemory.setVisibility(View.VISIBLE);
+                tvMemory.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        populateSearchedMemoriesList(memoryArrayList);
+                    }
+                });
+                populateMediaList(memory);
+            }
+        });
+        tvVacation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(UserProfileActivity.this, MainActivity.class);
+                i.putExtra("whichtab", 0);
+                startActivity(i);
+            }
+        });
+
+        listView.setAdapter(adapter);
+
+    }
+    //endregion
 }

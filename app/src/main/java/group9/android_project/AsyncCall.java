@@ -134,6 +134,11 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 response = ApiRequest.DeleteMedia(media, params[0].context);
                 return response;
             }
+            case "GetSearchedMemories": {
+                User user= params[0].user;
+                response = ApiRequest.GetSearchedMemories(user, params[0].context);
+                return response;
+            }
 
             default:{
                 break;

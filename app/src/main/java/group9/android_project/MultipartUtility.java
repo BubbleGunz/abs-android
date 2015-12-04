@@ -67,8 +67,6 @@ public class MultipartUtility {
      */
     public void addFilePart(String fieldName, File uploadFile)
             throws IOException {
-        Long milli = System.currentTimeMillis();
-
         String fileName = uploadFile.getName();
         //fileName += milli.toString();
         String fromname = URLConnection.guessContentTypeFromName(fileName);

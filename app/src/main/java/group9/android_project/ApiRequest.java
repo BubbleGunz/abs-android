@@ -280,7 +280,6 @@ public class ApiRequest {
 
             StringBuilder sb = new StringBuilder();
             if(code == 204) {
-                jsonReturn.put("code", code);
 
             }
             else{
@@ -293,8 +292,9 @@ public class ApiRequest {
                 }
                 br.close();
                 JSONObject jsonResponse = new JSONObject(sb.toString());
-                jsonReturn.put("code", code);
             }
+            jsonReturn.put("code", code);
+
         }
         catch (JSONException e)
         {
@@ -1083,6 +1083,89 @@ public class ApiRequest {
         {
             e.printStackTrace();
         }finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            return jsonReturn;
+
+        }
+        //endregion
+    }
+
+    //GET -------- Returns memories for the searched user
+    public static JSONObject GetSearchedMemories(User searchedUser,Context context){
+        JSONObject jsonReturn = new JSONObject();
+        HttpURLConnection urlConnection = null;
+        ArrayList<Memory> memoryArrayList = new ArrayList<Memory>();
+
+        try
+        {
+            //region CONNECTION
+            User myUser = SharedPref.GetTokenInfo(context);
+            URL url = new URL("http://abs-cloud.elasticbeanstalk.com/api/v1/memories/search?type=user&q="+searchedUser.username);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.addRequestProperty("Accept", "application/json");
+            urlConnection.addRequestProperty("Authorization","bearer " +myUser.token);
+
+            StringBuilder sb = new StringBuilder();
+
+            int code = urlConnection.getResponseCode();
+            if(code == 200) {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+
+                JSONArray jsonResponse = new JSONArray(sb.toString());
+                for (int i = 0 ; i<jsonResponse.length();i++) {
+                    JSONObject memoryJson =  jsonResponse.getJSONObject(i);
+                    Memory memory = new Memory();
+                    memory.id = memoryJson.getInt("id");
+                    memory.title = memoryJson.getString("title");
+                    memory.description = memoryJson.getString("description");
+                    memory.place = memoryJson.getString("place");
+                    memory.time = memoryJson.getInt("time");
+                    JSONObject position = memoryJson.getJSONObject("position");
+                    Position p = new Position();
+                    p.latitude = (float)position.getDouble("latitude");
+                    p.longitude = (float)position.getDouble("longitude");
+                    memory.position = p;
+
+                    memoryArrayList.add(memory);
+                }
+
+            }
+
+            else{
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+            }
+            jsonReturn.put("memories",memoryArrayList);
+            jsonReturn.put("code",code);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally {
             if(urlConnection != null) {
                 urlConnection.disconnect();
             }

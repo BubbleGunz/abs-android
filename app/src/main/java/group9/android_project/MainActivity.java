@@ -1,5 +1,6 @@
 package group9.android_project;
 
+import android.app.SearchManager;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import javax.sql.StatementEvent;
 
 /**
@@ -28,13 +31,13 @@ public class MainActivity extends TabActivity
     Button btnSettings;
     SearchView svSearchMemory;
     User userInfo  = new User();
-
+    Context context = this;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Context context = this;
+        final Context context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
         Resources res = getResources();
@@ -159,6 +162,55 @@ public class MainActivity extends TabActivity
             }
         });
 
-    }
+        // Get the intent, verify the action and get the query
 
+        Button btnSearch = (Button)findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final SearchView svFriend = (SearchView)findViewById(R.id.search_bar);
+                CharSequence svFriendCharSeq = svFriend.getQuery();
+                String svFriendString = svFriendCharSeq.toString();
+                User searchedUser = new User();
+                searchedUser.username = svFriendString;
+                //GetSearchUser: Get the memories from searchbar
+                //region GetSearchUser
+                AsyncCallInfo info = new AsyncCallInfo();
+                info.command = "GetSearchedMemories";
+                info.context = context;
+                info.user = searchedUser;
+
+
+                AsyncCall asc = new AsyncCall() {
+                    @Override
+                    protected void onPostExecute(JSONObject jsonObject) {
+
+                        try {
+                            int code = (int) jsonObject.get("code");
+                            //String responseMsg = (String)jsonObject.get("message");
+
+                            if (code == 200) {
+                                ArrayList <Memory> memoryArrayList = (ArrayList<Memory>) jsonObject.get("memories");
+                                tvName.setText(userInfo.firstname + " " + userInfo.lastname);
+                                tvUsername.setText(userInfo.username);
+                                Intent i = new Intent(MainActivity.this, UserProfileActivity.class);
+                                i.putExtra("userObject", userInfo);
+                                i.putExtra("searchedmemories", memoryArrayList);
+                                startActivity(i);
+                            } else {
+                                Toast.makeText(MainActivity.this, code + " - User not found!", Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                };
+                asc.execute(info);
+                //endregion
+            }
+        });
+    }
 }
