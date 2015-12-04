@@ -190,6 +190,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         //Checking token: If token not valid - try to refresh token with savedprefs, else send to loginscreen
         //region CHECKING TOKEN
+        /*
         if (!isTokenValid) {
             AsyncCallInfo info = new AsyncCallInfo();
             info.command = "GetToken";
@@ -220,6 +221,7 @@ public class UserProfileActivity extends AppCompatActivity {
             asc.execute(info);
         }
         //endregion
+        */
 
         Intent i = getIntent();
         final User profileUser = (User) i.getSerializableExtra("userObject");
@@ -326,14 +328,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
                 try {
                     int code = (int) jsonObject.get("code");
-                    if (code == 20) {
+                    if (code == 200) {
 
                         ArrayList<Vacation> vacationList = (ArrayList<Vacation>) jsonObject.get("vacations");
-                        //File[] fileToCache = vacationList.toArray(new File[vacationList.size()]);
                         try {
-                            JSONObject json = new JSONObject();
-                            json.put("vacs", vacationList);
-                            String jsonString = json.toString();
                             CacheData.createCachedFile(UserProfileActivity.this,vacationList);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -531,6 +529,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                     tvVacation.setVisibility(View.VISIBLE);
                                 }
                             });
+                            listView.setAdapter(adapter);
+
 
                         } catch (IOException e) {
                             e.printStackTrace();

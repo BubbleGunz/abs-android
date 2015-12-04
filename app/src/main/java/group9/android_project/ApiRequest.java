@@ -331,6 +331,8 @@ public class ApiRequest {
             urlConnection.addRequestProperty("Authorization", "bearer " + myUser.token);
 
             int code = urlConnection.getResponseCode();
+            jsonReturn.put("code",code);
+
             StringBuilder sb = new StringBuilder();
             if(code == 200) {
 
@@ -356,7 +358,7 @@ public class ApiRequest {
                     vacationList.add(vacation);
                 }
                 jsonReturn.put("vacations",vacationList);
-                jsonReturn.put("code",code);
+
             }
 
             else{
@@ -376,6 +378,8 @@ public class ApiRequest {
         }
         catch (IOException e)
         {
+            jsonReturn.put("code",404);
+
             e.printStackTrace();
         }finally {
             if(urlConnection != null) {

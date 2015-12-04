@@ -77,13 +77,14 @@ public class CacheData {
         ArrayList<Vacation> vacationArrayList = null;
         JSONObject jsonReturn = null;
         File file = null;
+        ArrayList<Vacation> vacations = null;
         try {
             file = new File(context.getCacheDir(), "MyCache");
 
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
             try {
-                List<Vacation> clubs = (List<Vacation>) ois.readObject();
+                vacations = (ArrayList<Vacation>) ois.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -125,7 +126,7 @@ public class CacheData {
             e.printStackTrace();
         }
 
-        return vacationArrayList;
+        return vacations;
 
         /*final File cache_dir = context.getCacheDir();
         final File suspend_f = new File(cache_dir.getAbsoluteFile() + File.separator + key);

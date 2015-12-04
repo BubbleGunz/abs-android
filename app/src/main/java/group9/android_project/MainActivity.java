@@ -32,7 +32,7 @@ public class MainActivity extends TabActivity
     SearchView svSearchMemory;
     User userInfo  = new User();
     Context context = this;
-
+    int tabActive = 0;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -51,7 +51,7 @@ public class MainActivity extends TabActivity
         //GetUserInfo: Get the information of an user
         //region GetUserInfo
         AsyncCallInfo info = new AsyncCallInfo();
-        User myUser = SharedPref.GetTokenInfo(context);
+        final User myUser = SharedPref.GetTokenInfo(context);
         myUser.username = SharedPref.GetUsername(context);
         info.command = "GetUserInfo";
         info.context = context;
@@ -73,8 +73,13 @@ public class MainActivity extends TabActivity
                         tvUsername.setText(userInfo.username);
                         return;
                     } else {
-                        Toast.makeText(MainActivity.this, code + " - User not found!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        boolean isTokenValid = TokenHandler.checkToken(context);
+                        if(isTokenValid)
+                            return;
+                        else {
+                            Toast.makeText(MainActivity.this, code + " - User not found!", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        }
 
 
                     }
@@ -138,7 +143,13 @@ public class MainActivity extends TabActivity
 
 
         Intent i = getIntent();
-        final int tabActive = (int) i.getSerializableExtra("whichtab");
+        if(i.getSerializableExtra("whichtab") == null)
+        {
+            tabActive = 0;
+        }
+        else{
+            tabActive = (int) i.getSerializableExtra("whichtab");
+        }
         if(tabActive > -1)
         {
             tabHost.setCurrentTab(tabActive);
