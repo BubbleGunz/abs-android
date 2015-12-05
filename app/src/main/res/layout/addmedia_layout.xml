@@ -40,7 +40,7 @@
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Getimage"
+                    android:text="Get image"
                     android:id="@+id/btnGetFile" />
 
                 <Button
@@ -49,6 +49,13 @@
                     android:layout_height="wrap_content"
                     android:text="Get video"
                     android:id="@+id/btnGetVideo" />
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Get sound"
+                    android:id="@+id/btnGetSound" />
             </LinearLayout>
 
             <TextView

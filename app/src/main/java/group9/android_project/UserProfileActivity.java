@@ -71,6 +71,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private static final int SELECTED_PICTURE = 1;
     private static final int PICK_IMAGE = 1;
     private static final int SELECT_VIDEO = 3;
+    private static final int SELECT_SOUND = 4;
+
     ArrayList<Media> mediaList = new ArrayList<>();
     ImageView imgViewAdd;
 
@@ -853,6 +855,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                 imgViewAdd = (ImageView) dialog.findViewById(R.id.imgViewAdd);
                                 tvFilepath = (TextView) dialog.findViewById(R.id.tvFilepath);
                                 Button btnGetVideo = (Button) dialog.findViewById(R.id.btnGetVideo);
+                                Button btnGetSound = (Button) dialog.findViewById(R.id.btnGetSound);
+
                                 btnGetFile = (Button) dialog.findViewById(R.id.btnGetFile);
                                 btnGetFile.setOnClickListener(new View.OnClickListener() {
                                     public void onClick(View v) {
@@ -881,6 +885,23 @@ public class UserProfileActivity extends AppCompatActivity {
                                         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                                         startActivityForResult(chooserIntent, SELECT_VIDEO);
+                                    }
+                                });
+
+                                //INTE SÄKERT DETTA FUNKAR - Stackoverflow va nere......så chansa
+                                btnGetSound.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+
+                                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                                        getIntent.setType("sound/*");
+
+                                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                        pickIntent.setType("sound/*");
+
+                                        Intent chooserIntent = Intent.createChooser(getIntent, "Select a soundfile ");
+                                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+                                        startActivityForResult(chooserIntent, SELECT_SOUND);
                                     }
                                 });
 
@@ -1003,10 +1024,18 @@ public class UserProfileActivity extends AppCompatActivity {
                 break;
             case SELECT_VIDEO:
                 if (resultCode == RESULT_OK) {
-                    System.out.println("SELECT_VIDEO");
                     Uri selectedVideoUri = data.getData();
                     String selectedPath = getPath(selectedVideoUri);
-                    System.out.println("SELECT_VIDEO Path : " + selectedPath);
+
+                    tvFilepath.setText(selectedPath);
+                    btnConfirm.setEnabled(true);
+
+                }
+                break;
+            case SELECT_SOUND:
+                if (resultCode == RESULT_OK) {
+                    Uri selectedVideoUri = data.getData();
+                    String selectedPath = getPath(selectedVideoUri);
 
                     tvFilepath.setText(selectedPath);
                     btnConfirm.setEnabled(true);
