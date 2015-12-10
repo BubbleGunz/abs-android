@@ -90,7 +90,7 @@ public class AsyncCall extends AsyncTask<AsyncCallInfo,Void,JSONObject> {
                 Memory memory= params[0].memory;
                 String filePath= params[0].filePath;
 
-                response = ApiRequest.UploadFile(memory, filePath, params[0].context);
+                response = ApiRequest.UploadFile(memory, filePath, params[0].context, params[0].fileType);
                 return response;
             }
             case "RemoveVacation": {

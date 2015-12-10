@@ -736,22 +736,39 @@ public class ApiRequest {
     }
 
     //POST --------Upload file : Upload a file to the memory
-    public static JSONObject UploadFile(Memory memory,String filePath, Context context) {
+    public static JSONObject UploadFile(Memory memory,String filePath, Context context, String fileType) {
         JSONObject jsonReturn = new JSONObject();
 
         if (filePath != null) {
             String charset = "UTF-8";
             File uploadFile = new File(filePath);
+            String requestURL ="";
+            String filePart = "";
+            if(fileType.equals("image"))
+            {
+                requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/" + memory.id + "/pictures?width=100&height=100";
+                filePart = "picture-file";
+            }
+            else if (fileType.equals("video"))
+            {
+                requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/"+memory.id+"/videos";
+                filePart = "video-file";
+            }
+            else if(fileType.equals("sound"))
+            {
+                requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/"+memory.id+"/sounds?duration=10&codec=codec&bitrate=10&channels=10&samplingrate=10";
+                filePart = "sound-file";
+            }
 
-            String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/"+memory.id+"/videos?width=26&height=26&videocodec=video&videobitrate=26&framerate=26&audiocodec=video&audiobitrate=26&channels=26&samplingrate=26";
 
-            //String requestURL = "http://www.abs-cloud.elasticbeanstalk.com/api/v1/memories/" + memory.id + "/pictures?width=100&height=100";
+
+            //
 
             try {
                 MultipartUtility multipart = new MultipartUtility(requestURL, charset, context);
 
-               multipart.addFilePart("video-file", uploadFile);
-               //multipart.addFilePart("picture-file", uploadFile);
+               multipart.addFilePart(filePart, uploadFile);
+
 
 
                 jsonReturn = multipart.finish();

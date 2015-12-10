@@ -19,5 +19,6 @@ public class AsyncCallInfo {
     public Context context;
     public Media media;
     public String filePath;
+    public String fileType;
 
 }

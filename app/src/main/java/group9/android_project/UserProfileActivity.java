@@ -72,6 +72,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 1;
     private static final int SELECT_VIDEO = 3;
     private static final int SELECT_SOUND = 4;
+    String fileType = "";
 
     ArrayList<Media> mediaList = new ArrayList<>();
     ImageView imgViewAdd;
@@ -869,6 +870,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
                                         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
+                                        fileType = "image";
                                         startActivityForResult(chooserIntent, PICK_IMAGE);
                                     }
                                 });
@@ -878,12 +880,13 @@ public class UserProfileActivity extends AppCompatActivity {
                                         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                                         getIntent.setType("video/*");
 
-                                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                                         pickIntent.setType("video/*");
 
                                         Intent chooserIntent = Intent.createChooser(getIntent, "Select a Video ");
                                         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
+                                        fileType = "video";
                                         startActivityForResult(chooserIntent, SELECT_VIDEO);
                                     }
                                 });
@@ -893,14 +896,15 @@ public class UserProfileActivity extends AppCompatActivity {
                                     public void onClick(View v) {
 
                                         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                                        getIntent.setType("sound/*");
+                                        getIntent.setType("audio/*");
 
-                                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                        pickIntent.setType("sound/*");
+                                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                                        pickIntent.setType("audio/*");
 
                                         Intent chooserIntent = Intent.createChooser(getIntent, "Select a soundfile ");
                                         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
+                                        fileType = "sound";
                                         startActivityForResult(chooserIntent, SELECT_SOUND);
                                     }
                                 });
@@ -945,10 +949,11 @@ public class UserProfileActivity extends AppCompatActivity {
                                             }
                                         };
 
-                                        Upload.postVideo(memory.id, myFile, token.token, responseHandler);
-                                        /*info.memory = memory;
+                                        //Upload.postVideo(memory.id, myFile, token.token, responseHandler);
+                                        info.memory = memory;
                                         info.filePath = filePath;
                                         info.command = "UploadFile";
+                                        info.fileType = fileType;
                                         info.context = context;
                                         AsyncCall asc = new AsyncCall() {
                                             @Override
@@ -975,7 +980,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         };
                                         asc.execute(info);
                                         //endregion
-*/
+
                                     }
                                 });
                             }

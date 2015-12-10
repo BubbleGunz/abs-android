@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * Created by Fetes on 2015-11-10.
  */
-public class SharedPref {
+ class SharedPref {
 
     private static String PREF_NAME ="prefs";
 
